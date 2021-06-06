@@ -1,7 +1,7 @@
-const team = require('League_man/Domain_Layer/System');
+const add_game = require('./Game/basicInfo');
 
-test('....',()=>{
-    expect()
+test('add game to system- league',()=>{
+    expect(add_game)
 })
 
 
