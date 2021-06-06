@@ -1,7 +1,7 @@
 const axios = require("axios");
 const DButils = require("../../Data_Layer/DButils");
 const team_utils = require("./teams_utils");
-const data_utils = require("../Data_Layer/sqlScripts");
+const data_utils = require("../../Data_Layer/sqlScripts");
 
 // const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 
@@ -31,7 +31,11 @@ async function AddGame(data) {
 //in use
 async function AddScoresToGame(gameId, homeGoal, awayGoal) {
   try {
-    data_utils.updateTable('dbo.games',[`home_team_goal = ${homeGoal}`, `away_team_goal =${awayGoal}`], [`game_id = ${gameId}`])
+    data_utils.updateTable(
+      "dbo.games",
+      [`home_team_goal = ${homeGoal}`, `away_team_goal =${awayGoal}`],
+      [`game_id = ${gameId}`]
+    );
     // await DButils.execQuery(
     //   `UPDATE dbo.games SET home_team_goal = ${homeGoal}, away_team_goal =${awayGoal} WHERE game_id = ${gameId}`
     // );
@@ -51,7 +55,11 @@ function convertDateAndHour(date, hour) {
 //in use
 async function checkIfGameOccur(game_id) {
   game_id_num = Number(game_id);
-  const gameDetails = await data_utils.getFromTable('dbo.games', ['game_date', 'game_hour'],[`game_id = ${game_id_num}`]);
+  const gameDetails = await data_utils.getFromTable(
+    "dbo.games",
+    ["game_date", "game_hour"],
+    [`game_id = ${game_id_num}`]
+  );
   // const gameDetails = await DButils.execQuery(
   //   `SELECT game_date, game_hour from dbo.games WHERE game_id = ${game_id_num}`
   // );
@@ -80,14 +88,22 @@ async function checkIfGameOccur(game_id) {
 }
 //in use
 async function getGameDetaildByID(game_id) {
-  const game = await data_utils.getFromTable('dbo.games', ['*'], [`game_id = ${game_id}`]);
+  const game = await data_utils.getFromTable(
+    "dbo.games",
+    ["*"],
+    [`game_id = ${game_id}`]
+  );
   // const game = await DButils.execQuery(
   //   `select * from dbo.games where game_id = ${game_id} `
   // );
 
   if (game[0]) {
     // game exist in the DB
-    const gameEvents = await data_utils.getFromTable('dbo.ScheduleEvents', ['*'], [`game_id = ${game_id}`]);
+    const gameEvents = await data_utils.getFromTable(
+      "dbo.ScheduleEvents",
+      ["*"],
+      [`game_id = ${game_id}`]
+    );
     // const gameEvents = await DButils.execQuery(
     //   `select * from ScheduleEvents WHERE game_id = ${game_id}`
     // );
@@ -133,10 +149,20 @@ async function getGameDetaildByID(game_id) {
 async function AddEventToGame(data) {
   try {
     const { game_id, date, hour, game_minute, event_type, player_id } = data;
-    data_utils.insertinto('dbo.ScheduleEvents',['game_id', 'event_date', 'event_hour', 'game_minute', 'event_type', 'player_id'],
-    [game_id,date1,hour1,game_minute,event_type,player_id]);
-  //   await DButils.execQuery(`insert into dbo.ScheduleEvents (game_id, event_date, event_hour, game_minute, event_type, player_id) 
-  // values ('${game_id}', '${date1}', '${hour1}', '${game_minute}' , '${event_type}', '${player_id}') `);
+    data_utils.insertinto(
+      "dbo.ScheduleEvents",
+      [
+        "game_id",
+        "event_date",
+        "event_hour",
+        "game_minute",
+        "event_type",
+        "player_id",
+      ],
+      [game_id, date1, hour1, game_minute, event_type, player_id]
+    );
+    //   await DButils.execQuery(`insert into dbo.ScheduleEvents (game_id, event_date, event_hour, game_minute, event_type, player_id)
+    // values ('${game_id}', '${date1}', '${hour1}', '${game_minute}' , '${event_type}', '${player_id}') `);
   } catch (error) {
     error;
   }
@@ -168,7 +194,11 @@ function checkIfGameDetailsInFuture(date, hour) {
 //in use
 async function checkGameDetails(data) {
   let message = "";
-  const gameAtSameTime = data_utils.getFromTable('dbo.games',['home_team_id', 'away_team_id', 'field'], [`game_date ='${data.date}'`,`game_hour='${data.hour}'`]);
+  const gameAtSameTime = data_utils.getFromTable(
+    "dbo.games",
+    ["home_team_id", "away_team_id", "field"],
+    [`game_date ='${data.date}'`, `game_hour='${data.hour}'`]
+  );
   // const gameAtSameTime = await DButils.execQuery(
   //   `select home_team_id, away_team_id, field from dbo.games WHERE game_date ='${data.date}' AND game_hour='${data.hour}'`
   // );
@@ -189,7 +219,7 @@ async function checkGameDetails(data) {
 //in use
 async function getAllLeagueGames() {
   try {
-    const games = await data_utils.getFromTable('dbo.games', ['*']);
+    const games = await data_utils.getFromTable("dbo.games", ["*"]);
     // const games = await DButils.execQuery(`select * from dbo.games `);
     return games;
   } catch {
@@ -200,7 +230,11 @@ async function getAllLeagueGames() {
 async function checkIFPlayerInGame(game_id, player_id) {
   try {
     game_id_num = Number(game_id);
-    const gameDetails = await data_utils.getFromTable('dbo.games',['home_team_id', 'away_team_id'],[`game_id = ${game_id_num}`]);
+    const gameDetails = await data_utils.getFromTable(
+      "dbo.games",
+      ["home_team_id", "away_team_id"],
+      [`game_id = ${game_id_num}`]
+    );
     // const gameDetails = await DButils.execQuery(
     //   `SELECT home_team_id, away_team_id from dbo.games WHERE game_id = ${game_id_num}`
     // );
