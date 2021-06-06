@@ -3,6 +3,7 @@ var router = express.Router();
 const games_utils = require("./utils/games_utils");
 const DButils = require("../Data_Layer/DButils");
 const team_utils = require("./utils/teams_utils");
+const data_utils = require("../Data_Layer/sqlScripts");
 
 router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
   try {
@@ -21,7 +22,8 @@ router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
 router.use(async function (req, res, next) {
   if (req.session && req.session.username === "admin") {
     //clieant verification
-    DButils.execQuery("SELECT username FROM dbo.Users")
+    data_utils.getFromTable('dbo.Users',['username'])
+    // DButils.execQuery("SELECT username FROM dbo.Users")
       .then((users) => {
         if (users.find((x) => x.username === req.session.username)) {
           req.username = req.session.username;
