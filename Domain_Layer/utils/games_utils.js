@@ -1,5 +1,5 @@
 const axios = require("axios");
-const DButils = require("./DButils");
+const DButils = require("../../Data_Layer/DButils");
 const team_utils = require("./teams_utils");
 // const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 
@@ -187,22 +187,29 @@ async function getAllLeagueGames() {
   }
 }
 
-async function checkIFPlayerInGame(game_id, player_id){
-  try{
+async function checkIFPlayerInGame(game_id, player_id) {
+  try {
     game_id_num = Number(game_id);
     const gameDetails = await DButils.execQuery(
       `SELECT home_team_id, away_team_id from dbo.games WHERE game_id = ${game_id_num}`
     );
     if (gameDetails[0]) {
-      const home_team_id= gameDetails[0].home_team_id;
-      const away_team_id= gameDetails[0].away_team_id;
-      const playerExist = await team_utils.checkPlayerInTeam(player_id, home_team_id,away_team_id);
-      if(playerExist){return true;}
+      const home_team_id = gameDetails[0].home_team_id;
+      const away_team_id = gameDetails[0].away_team_id;
+      const playerExist = await team_utils.checkPlayerInTeam(
+        player_id,
+        home_team_id,
+        away_team_id
+      );
+      if (playerExist) {
+        return true;
+      }
       return false;
     }
     return false;
+  } catch {
+    return false;
   }
-  catch{return false;}
 }
 
 exports.AddGame = AddGame;
@@ -214,4 +221,4 @@ exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
 exports.getAllLeagueGames = getAllLeagueGames;
 exports.checkGameDetails = checkGameDetails;
-exports.checkIFPlayerInGame =checkIFPlayerInGame;
+exports.checkIFPlayerInGame = checkIFPlayerInGame;

@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const games_utils = require("./utils/games_utils");
-const DButils = require("./utils/DButils");
+const DButils = require("../Data_Layer/DButils");
 const team_utils = require("./utils/teams_utils");
 
 router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
@@ -89,7 +89,10 @@ router.post("/LeagueManagment/addEvent", async (req, res, next) => {
     const game_id = data.game_id;
     const player_id = data.player_id;
     const availableToAddEvent = await games_utils.checkIfGameOccur(game_id);
-    const checkIfplayerInGames = await games_utils.checkIFPlayerInGame(game_id, player_id);
+    const checkIfplayerInGames = await games_utils.checkIFPlayerInGame(
+      game_id,
+      player_id
+    );
     if (availableToAddEvent && checkIfplayerInGames) {
       await games_utils.AddEventToGame(data);
       res

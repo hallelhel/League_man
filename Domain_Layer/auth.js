@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const DButils = require("../routes/utils/DButils");
+const DButils = require("../Data_Layer/DButils");
 const bcrypt = require("bcryptjs");
 
 router.post("/register", async (req, res, next) => {
@@ -47,14 +47,12 @@ router.post("/login", async (req, res, next) => {
     }
 
     // Set cookie
-    try{
-      if (req.session.username){
+    try {
+      if (req.session.username) {
         res.status(401).send("User already loged-in");
         return;
       }
-    }
-    catch{
-    }
+    } catch {}
     req.session.username = user.username;
 
     // return cookie

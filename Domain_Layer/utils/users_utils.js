@@ -1,11 +1,7 @@
-const DButils = require("./DButils");
-
-
+const DButils = require("../../Data_Layer/DButils");
 
 async function getAllUsers() {
-  const users = await DButils.execQuery(
-    'select * from dbo.Users'
-  );
+  const users = await DButils.execQuery("select * from dbo.Users");
   return users;
 }
 
@@ -19,7 +15,6 @@ async function getUserDetails(username) {
 // async function getUserFavoriteGames(){
 //   return await DButils.execQuery(`select * from dbo.userFavoriteGames`);
 // }
-
 
 exports.getAllUsers = getAllUsers;
 exports.getUserDetails = getUserDetails;

@@ -3,7 +3,7 @@ const e = require("express");
 const { trace } = require("../teams");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const players_utils = require("./players_utils");
-const DButils = require("./DButils");
+const DButils = require("../../Data_Layer/DButils");
 
 async function getPlayersByTeam(team_id) {
   let player_ids_list = await getPlayerIdsByTeam(team_id);
@@ -165,15 +165,20 @@ async function getTeamNameById(team_id) {
   return team.data.data.name;
 }
 
-async function checkPlayerInTeam(player_id,home_team_id,away_team_id){
-  try{
+async function checkPlayerInTeam(player_id, home_team_id, away_team_id) {
+  try {
     const squad_team1 = await getPlayerIdsByTeam(home_team_id);
     const squad_team2 = await getPlayerIdsByTeam(away_team_id);
-    if((squad_team1).find((x)=> x === player_id)){return true;}
-    if((squad_team2).find((x)=> x === player_id)){return true;}
+    if (squad_team1.find((x) => x === player_id)) {
+      return true;
+    }
+    if (squad_team2.find((x) => x === player_id)) {
+      return true;
+    }
+    return false;
+  } catch {
     return false;
   }
-  catch{return false;}
 }
 // async function checkTeamLeague(teamID) {
 //   const team = await axios.get(`${api_domain}/teams/${teamID}`, {
