@@ -3,18 +3,15 @@ var router = express.Router();
 const DButils = require("../routes/utils/DButils");
 const bcrypt = require("bcryptjs");
 
-router.post("/Register", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   try {
     // parameters exists
     // valid parameters
     // username exists
-    const users = await DButils.execQuery(
-      "SELECT username FROM dbo.users"
-    );
+    const users = await DButils.execQuery("SELECT username FROM dbo.Users");
 
     if (users.find((x) => x.username === req.body.username))
       throw { status: 409, message: "Username taken" };
-
 
     //hash the password
     let hash_password = bcrypt.hashSync(
@@ -25,8 +22,8 @@ router.post("/Register", async (req, res, next) => {
 
     // add the new username
     await DButils.execQuery(
-      `INSERT INTO dbo.users (username, first_name, last_name, country, password, email, img) VALUES 
-      ('${req.body.username}', '${req.body.first_name}', '${req.body.last_name}', '${req.body.country}', '${hash_password}' ,'${req.body.email}', '${req.body.img}')`
+      `INSERT INTO dbo.Users (username, firstname, lastname, country, password, email, picture, Role) VALUES ('${req.body.username}', '${req.body.firstname}','${req.body.lastname}','${req.body.country}','${hash_password}','${req.body.email}','${req.body.picture}',
+      '${req.body.Role}')`
     );
     res.status(201).send("user created");
   } catch (error) {
@@ -34,11 +31,11 @@ router.post("/Register", async (req, res, next) => {
   }
 });
 
-router.post("/Login", async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   try {
     const user = (
       await DButils.execQuery(
-        `SELECT * FROM dbo.users WHERE username = '${req.body.username}'`
+        `SELECT * FROM dbo.Users WHERE username = '${req.body.username}'`
       )
     )[0];
     // user = user[0];
@@ -50,7 +47,15 @@ router.post("/Login", async (req, res, next) => {
     }
 
     // Set cookie
-    req.session.user_id = user.user_id;
+    try{
+      if (req.session.username){
+        res.status(401).send("User already loged-in");
+        return;
+      }
+    }
+    catch{
+    }
+    req.session.username = user.username;
 
     // return cookie
     res.status(200).send("login succeeded");
@@ -59,9 +64,13 @@ router.post("/Login", async (req, res, next) => {
   }
 });
 
-router.post("/Logout", function (req, res) {
-  req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
-  res.send({ success: true, message: "logout succeeded" });
+router.post("/user/logOut", function (req, res) {
+  if (req.session.username) {
+    req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
+    res.status(200).send({ success: true, message: "logout succeeded" });
+  } else {
+    res.status(400).send({ success: false, message: "No user to logout." });
+  }
 });
 
 module.exports = router;
