@@ -2,14 +2,16 @@ var express = require("express");
 var router = express.Router();
 const DButils = require("../Data_Layer/DButils");
 const bcrypt = require("bcryptjs");
+const data_utils = require("../Data_Layer/sqlScripts");
+
 
 router.post("/register", async (req, res, next) => {
   try {
     // parameters exists
     // valid parameters
     // username exists
-    const users = await DButils.execQuery("SELECT username FROM dbo.Users");
 
+    let users = await data_utils.getFromTable('dbo.Users', ['username']);
     if (users.find((x) => x.username === req.body.username))
       throw { status: 409, message: "Username taken" };
 
@@ -21,11 +23,11 @@ router.post("/register", async (req, res, next) => {
     req.body.password = hash_password;
 
     // add the new username
-    await DButils.execQuery(
-      `INSERT INTO dbo.Users (username, firstname, lastname, country, password, email, picture, Role) VALUES ('${req.body.username}', '${req.body.firstname}','${req.body.lastname}','${req.body.country}','${hash_password}','${req.body.email}','${req.body.picture}',
-      '${req.body.Role}')`
-    );
-    res.status(201).send("user created");
+    const {username, firstname, lastname, country, password, email, picture, Role} = req.body;
+    let status = await data_utils.insertinto('dbo.Users',['username', 'firstname', 'lastname', 'country', 'password', 'email', 'picture', 'Role'],
+      [username, firstname, lastname, country, password, email, picture, Role]);
+    if (!status){res.status(400).send("user not created, error")}
+    else{res.status(201).send("user created");}
   } catch (error) {
     next(error);
   }
@@ -33,11 +35,12 @@ router.post("/register", async (req, res, next) => {
 
 router.post("/login", async (req, res, next) => {
   try {
-    const user = (
-      await DButils.execQuery(
-        `SELECT * FROM dbo.Users WHERE username = '${req.body.username}'`
-      )
-    )[0];
+    let user = await data_utils.getFromTable('dbo.Users', ['*'],[`username='${req.body.username}'`])[0]
+    // const user = (
+    //   await DButils.execQuery(
+    //     `SELECT * FROM dbo.Users WHERE username = '${req.body.username}'`
+    //   )
+    // )[0];
     // user = user[0];
     console.log(user);
 
