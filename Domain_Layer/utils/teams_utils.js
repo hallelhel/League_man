@@ -4,7 +4,7 @@ const { trace } = require("../teams");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const players_utils = require("./players_utils");
 const DButils = require("../../Data_Layer/DButils");
-const data_utils = require("../Data_Layer/sqlScripts");
+const data_utils = require("../../Data_Layer/sqlScripts");
 
 async function getPlayersByTeam(team_id) {
   let player_ids_list = await getPlayerIdsByTeam(team_id);
@@ -108,7 +108,10 @@ async function getTeamGames(team_id) {
 //in use
 async function checkIfTeamExist(team_id) {
   try {
-    const team = await data_utils.getFromSoccerAPI(`teams/${team_id}`, 'league')
+    const team = await data_utils.getFromSoccerAPI(
+      `teams/${team_id}`,
+      "league"
+    );
     // const team = await axios.get(`${api_domain}/teams/${team_id}`, {
     //   params: {
     //     include: "league",

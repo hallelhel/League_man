@@ -13,8 +13,9 @@ const data_utils = require("../Data_Layer/sqlScripts");
 router.use(async function (req, res, next) {
   if (req.session && req.session.username) {
     //clieant verification
-    await data_utils.getFromTable('dbo.Users', ['username'])
-    // DButils.execQuery("SELECT username FROM dbo.Users")
+    await data_utils
+      .getFromTable("dbo.Users", ["username"])
+      // DButils.execQuery("SELECT username FROM dbo.Users")
       .then((users) => {
         if (users.find((x) => x.username === req.session.username)) {
           req.username = req.session.username;
@@ -58,7 +59,6 @@ router.get("/userDetails", async (req, res, next) => {
 });
 
 module.exports = router;
-
 
 //old
 // router.post("/favoritePlayers", async (req, res, next) => {
@@ -160,4 +160,3 @@ module.exports = router;
 //     next(error);
 //   }
 // });
-
