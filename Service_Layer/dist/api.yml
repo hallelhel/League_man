@@ -150,9 +150,9 @@ paths:
                 field:
                   type: string
                   example: Tedi
-                referee_name:
+                referee_username:
                   type: string
-                  example: Yossi Cohen
+                  example: YossiCohen
       responses:
         "200":
           description: The game added to the league
@@ -579,7 +579,7 @@ components:
         picture:
           type: string
           example: path
-        Role:
+        role:
           type: string
           example: referee
     LeagueData:

@@ -34,6 +34,6 @@ exports.generateText= (name, age) => {
 // // }
 
 
-// exports.getAllUsers = getAllUsers;
-// exports.getUserDetails = getUserDetails;
+exports.getAllUsers = getAllUsers;
+exports.getUserDetails = getUserDetails;
 // exports.generateText = generateText;

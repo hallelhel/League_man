@@ -194,11 +194,10 @@ function checkIfGameDetailsInFuture(date, hour) {
 //in use
 async function checkGameDetails(data) {
   let message = "";
-  let firstname = data.referee_name.split(' ')[0];
-  let lastname = data.referee_name.split(' ')[1];
-  const refereeCheck = await data_utils.getFromTable('dbo.users',
-    ['firstname','lastname','Role'],
-    [`firstname='${firstname}'`,`lastname='${lastname}'`,`Role='referee'`]
+  let referee_username = data.referee_username;
+  const refereeCheck = await data_utils.getFromTable('dbo.role',
+    ['username','role'],
+    [`username='${referee_username}'`,`role='referee'`]
   )
   if(!refereeCheck[0]){return `referee user didn't found on DB`}
   const gameAtSameTime = await data_utils.getFromTable(
