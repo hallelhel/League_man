@@ -1,4 +1,4 @@
-const getFromTable = () => {
+const get = url => {
     return Promise.resolve({ data: { user: {
         user_id: 2,
         username: "noam",
@@ -11,4 +11,4 @@ const getFromTable = () => {
       } } });
   };
   
-  exports.getFromTable = getFromTable;
+  exports.get = get;
