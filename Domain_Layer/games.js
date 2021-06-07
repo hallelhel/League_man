@@ -25,14 +25,14 @@ router.use(async function (req, res, next) {
     data_utils.getFromTable('dbo.Users',['username'])
     // DButils.execQuery("SELECT username FROM dbo.Users")
       .then((users) => {
-        if (users.find((x) => x.username === req.session.username)) {
+        if (users.find((x) => (x.username === req.session.username))) {
           req.username = req.session.username;
           next();
         }
       })
       .catch((err) => next(err));
   } else {
-    res.status(401).send("Only admin can modify games in league");
+    res.status(401).send("Only referee can modify games in league");
   }
 });
 
@@ -66,48 +66,49 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
   }
 });
 
-router.post("/LeagueManagment/addScore", async (req, res, next) => {
-  try {
-    const { game_id, home_team_goal, away_team_goal } = await req.body;
-    const checkIfGameOccur = await games_utils.checkIfGameOccur(game_id); //if game occur return true, otherwise false;
-    if (checkIfGameOccur) {
-      await games_utils.AddScoresToGame(
-        game_id,
-        home_team_goal,
-        away_team_goal
-      );
-      res.status(200).send("Score update to game with id " + game_id);
-    } else {
-      res.status(400).send(`Game with id ${game_id} has not occur yet.`);
-    }
-  } catch (error) {
-    next(error);
-  }
-});
+//old project
+// router.post("/LeagueManagment/addScore", async (req, res, next) => {
+//   try {
+//     const { game_id, home_team_goal, away_team_goal } = await req.body;
+//     const checkIfGameOccur = await games_utils.checkIfGameOccur(game_id); //if game occur return true, otherwise false;
+//     if (checkIfGameOccur) {
+//       await games_utils.AddScoresToGame(
+//         game_id,
+//         home_team_goal,
+//         away_team_goal
+//       );
+//       res.status(200).send("Score update to game with id " + game_id);
+//     } else {
+//       res.status(400).send(`Game with id ${game_id} has not occur yet.`);
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
-router.post("/LeagueManagment/addEvent", async (req, res, next) => {
-  try {
-    const data = await req.body;
-    const game_id = data.game_id;
-    const player_id = data.player_id;
-    const availableToAddEvent = await games_utils.checkIfGameOccur(game_id);
-    const checkIfplayerInGames = await games_utils.checkIFPlayerInGame(
-      game_id,
-      player_id
-    );
-    if (availableToAddEvent && checkIfplayerInGames) {
-      await games_utils.AddEventToGame(data);
-      res
-        .status(200)
-        .send("The event has been added to game with id " + game_id);
-    } else {
-      res
-        .status(400)
-        .send("Can't add event to game. Please check the details.");
-    }
-  } catch (error) {
-    next(error);
-  }
-});
+// router.post("/LeagueManagment/addEvent", async (req, res, next) => {
+//   try {
+//     const data = await req.body;
+//     const game_id = data.game_id;
+//     const player_id = data.player_id;
+//     const availableToAddEvent = await games_utils.checkIfGameOccur(game_id);
+//     const checkIfplayerInGames = await games_utils.checkIFPlayerInGame(
+//       game_id,
+//       player_id
+//     );
+//     if (availableToAddEvent && checkIfplayerInGames) {
+//       await games_utils.AddEventToGame(data);
+//       res
+//         .status(200)
+//         .send("The event has been added to game with id " + game_id);
+//     } else {
+//       res
+//         .status(400)
+//         .send("Can't add event to game. Please check the details.");
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 module.exports = router;
