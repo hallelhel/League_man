@@ -55,8 +55,13 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
         res.status(400).send(checkGame);
         return;
       }
-      await games_utils.AddGame(data);
-      res.status(200).send("Game added successfuly");
+      let status = await games_utils.AddGame(data);
+      if(status){
+        res.status(200).send("Game added successfuly");
+        return;
+      }
+      else{res.status(400).send("Game adding failed");}
+      
     } else {
       // issues with date
       res.status(400).send("The game date is invalid");

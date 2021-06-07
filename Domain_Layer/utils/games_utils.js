@@ -13,19 +13,17 @@ async function getGamesInfo(games_ids_list) {
   let games_info = await Promise.all(promises);
   return games_info;
 }
-
+//in use
 async function AddGame(data) {
   try {
-    // const {date, hour, away_team_id, home_team_id, field} = data;
-    // let ref = data.referee_name;
     const home_team_name = await team_utils.getTeamNameById(data.home_team_id);
     const away_team_name = await team_utils.getTeamNameById(data.away_team_id);
-    await DButils.execQuery(
-      `insert into dbo.games (game_date, game_hour, home_team, away_team, home_team_id, away_team_id, field, referee_name) 
-       values ('${data.date}', '${data.hour}', '${home_team_name}', '${away_team_name}','${data.home_team_id}','${data.away_team_id}', '${data.field}', '${data.referee_name}') `
-    );
+    let status = await data_utils.insertinto('dbo.games',['game_date', 'game_hour', 'home_team', 'away_team', 'home_team_id', 'away_team_id', 'field', 'referee_name'],
+      [data.date, data.hour, home_team_name,away_team_name,data.home_team_id,data.away_team_id, data.field, data.referee_username]);
+    if(status){return true;}
+    return false;
   } catch (error) {
-    error;
+    return false;
   }
 }
 //in use

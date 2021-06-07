@@ -157,13 +157,9 @@ async function getTeamByName(teamName) {
     return "team not found";
   }
 }
-
+//in use
 async function getTeamNameById(team_id) {
-  const team = await axios.get(`${api_domain}/teams/${team_id}`, {
-    params: {
-      api_token: process.env.api_token,
-    },
-  });
+  const team = await data_utils.getFromSoccerAPI(`teams/${team_id}`)
   return team.data.data.name;
 }
 
