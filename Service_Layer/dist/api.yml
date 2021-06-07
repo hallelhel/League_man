@@ -152,7 +152,7 @@ paths:
                   example: Tedi
                 referee_username:
                   type: string
-                  example: YossiCohen
+                  example: noam
       responses:
         "200":
           description: The game added to the league
