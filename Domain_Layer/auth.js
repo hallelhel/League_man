@@ -23,9 +23,10 @@ router.post("/register", async (req, res, next) => {
     req.body.password = hash_password;
 
     // add the new username
-    const {username, firstname, lastname, country, password, email, picture, Role} = req.body;
-    let status = await data_utils.insertinto('dbo.Users',['username', 'firstname', 'lastname', 'country', 'password', 'email', 'picture', 'Role'],
-      [username, firstname, lastname, country, password, email, picture, Role]);
+    const {username, firstname, lastname, country, password, email, picture, role} = req.body;
+    let status = await data_utils.insertinto('dbo.Users',['username', 'firstname', 'lastname', 'country', 'password', 'email', 'picture'],
+      [username, firstname, lastname, country, password, email, picture]);
+    await data_utils.insertinto('dbo.role',['username','role'],[username, role])
     if (!status){res.status(400).send("user not created, error")}
     else{res.status(201).send("user created");}
   } catch (error) {
