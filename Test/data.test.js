@@ -1,3 +1,4 @@
+jest.mock('../__mock')
 const {getFromTable} = require('../Data_Layer/sqlScripts');
 
 test('Get table from db', () =>{
