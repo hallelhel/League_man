@@ -11,6 +11,8 @@ const session = require("client-sessions");
 var logger = require("morgan");
 var cors = require("cors");
 
+const {generateText} = require('../Domain_Layer/utils/users_utils');
+
 var app = express();
 app.use(logger("dev")); //logger
 app.use(express.json()); // parse application/json
