@@ -1,8 +1,8 @@
-const {generateText} = require('../Data_Layer/sqlScript');
+const {getFromTable} = require('../Data_Layer/sqlScripts');
 
-test('col hakvod!!!!!', () =>{
-    const text = getFromTable('User', 29);
-    expect(text).toBe('hallel (29 years old)');
+test('Get table from db', () =>{
+    const text = getFromTable('dbo.Users', ['*'],[`username=noam`]);
+    expect(text).toBe('');
 });
 
 
