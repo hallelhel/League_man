@@ -1,7 +1,7 @@
 
 const {generateText} = require('../Domain_Layer/utils/users_utils');
 
-test('shulf work!!!!!', () =>{
+test('check test unit', () =>{
     const text = generateText('hallel', 29);
     expect(text).toBe('hallel (29 years old)');
 });
