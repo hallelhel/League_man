@@ -12,6 +12,7 @@ var logger = require("morgan");
 var cors = require("cors");
 
 const {generateText} = require('../Domain_Layer/utils/users_utils');
+const {getFromTable} = require('../Data_Layer/sqlScripts');
 
 var app = express();
 app.use(logger("dev")); //logger
