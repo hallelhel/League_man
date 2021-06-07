@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const DButils = require("../Data_Layer/DButils");
+// const DButils = require("../Data_Layer/DButils");
 const bcrypt = require("bcryptjs");
 const data_utils = require("../Data_Layer/sqlScripts");
 
@@ -38,13 +38,6 @@ router.post("/login", async (req, res, next) => {
   try {
     let user = await data_utils.getFromTable('dbo.Users', ['*'],[`username='${req.body.username}'`])
     user = user[0]
-    // const user = (
-    //   await DButils.execQuery(
-    //     `SELECT * FROM dbo.Users WHERE username = '${req.body.username}'`
-    //   )
-    // )[0];
-    // user = user[0];
-    console.log(user);
 
     // check that username exists & the password is correct
     if (!user || !bcrypt.compareSync(req.body.password, user.password)) {

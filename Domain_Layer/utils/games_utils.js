@@ -1,18 +1,18 @@
-const axios = require("axios");
-const DButils = require("../../Data_Layer/DButils");
+// const axios = require("axios");
+// const DButils = require("../../Data_Layer/DButils");
 const team_utils = require("./teams_utils");
 const data_utils = require("../../Data_Layer/sqlScripts");
 
 // const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 
-async function getGamesInfo(games_ids_list) {
-  //return list of games info
-  // we remove the await
-  let promises = [];
-  games_ids_list.map((row) => promises.push(getGameDetaildByID(row.gameID)));
-  let games_info = await Promise.all(promises);
-  return games_info;
-}
+// async function getGamesInfo(games_ids_list) {
+//   //return list of games info
+//   // we remove the await
+//   let promises = [];
+//   games_ids_list.map((row) => promises.push(getGameDetaildByID(row.gameID)));
+//   let games_info = await Promise.all(promises);
+//   return games_info;
+// }
 //in use
 async function AddGame(data) {
   try {
@@ -34,9 +34,6 @@ async function AddScoresToGame(gameId, homeGoal, awayGoal) {
       [`home_team_goal = ${homeGoal}`, `away_team_goal =${awayGoal}`],
       [`game_id = ${gameId}`]
     );
-    // await DButils.execQuery(
-    //   `UPDATE dbo.games SET home_team_goal = ${homeGoal}, away_team_goal =${awayGoal} WHERE game_id = ${gameId}`
-    // );
   } catch (error) {
     error;
   }
@@ -58,11 +55,6 @@ async function checkIfGameOccur(game_id) {
     ["game_date", "game_hour"],
     [`game_id = ${game_id_num}`]
   );
-  // const gameDetails = await DButils.execQuery(
-  //   `SELECT game_date, game_hour from dbo.games WHERE game_id = ${game_id_num}`
-  // );
-
-  //const games = await DButils.execQuery(`select * from dbo.games`);
   if (gameDetails[0]) {
     const date_hour_convert = convertDateAndHour(
       gameDetails[0].game_date,
@@ -91,10 +83,6 @@ async function getGameDetaildByID(game_id) {
     ["*"],
     [`game_id = ${game_id}`]
   );
-  // const game = await DButils.execQuery(
-  //   `select * from dbo.games where game_id = ${game_id} `
-  // );
-
   if (game[0]) {
     // game exist in the DB
     const gameEvents = await data_utils.getFromTable(
@@ -159,8 +147,6 @@ async function AddEventToGame(data) {
       ],
       [game_id, date1, hour1, game_minute, event_type, player_id]
     );
-    //   await DButils.execQuery(`insert into dbo.ScheduleEvents (game_id, event_date, event_hour, game_minute, event_type, player_id)
-    // values ('${game_id}', '${date1}', '${hour1}', '${game_minute}' , '${event_type}', '${player_id}') `);
   } catch (error) {
     error;
   }
@@ -178,8 +164,6 @@ function checkIfGameDetailsInFuture(date, hour) {
   } else {
     const nowHour = currentDate[1].split(":")[0];
     const gameHour = hour.split(":")[0];
-    // const toDayHour = Number();
-    // const gameHour = Number(hour.split(":"));
     if (nowHour < gameHour) {
       check = true;
     } else {
@@ -191,40 +175,38 @@ function checkIfGameDetailsInFuture(date, hour) {
 }
 //in use
 async function checkGameDetails(data) {
-  let message = "";
-  let referee_username = data.referee_username;
-  const refereeCheck = await data_utils.getFromTable('dbo.role',
-    ['username','role'],
-    [`username='${referee_username}'`,`role='referee'`]
-  )
-  if(!refereeCheck[0]){return `referee user didn't found on DB`}
-  const gameAtSameTime = await data_utils.getFromTable(
-    "dbo.games",
-    ["home_team_id", "away_team_id", "field"],
-    [`game_date ='${data.date}'`, `game_hour='${data.hour}'`]
-  );
-  // const gameAtSameTime = await DButils.execQuery(
-  //   `select home_team_id, away_team_id, field from dbo.games WHERE game_date ='${data.date}' AND game_hour='${data.hour}'`
-  // );
-  if (
-    gameAtSameTime.find(
-      (x) =>
-        x.home_team_id === data.home_team_id ||
-        x.away_team_id === data.away_team_id
+  try{
+    let message = "";
+    let referee_username = data.referee_username;
+    let refereeCheck = await data_utils.getFromTable('dbo.role',
+      ['username','role'],
+      [`username='${referee_username}'`,`role='referee'`]
     )
-  ) {
-    message += "One or Both teams already embedded  in this time.\n";
+    if(!refereeCheck[0]){return `referee user didn't found on DB`}
+    let gameAtSameTime = await data_utils.getFromTable("dbo.games",
+      ["home_team_id", "away_team_id", "field"],
+      [`game_date ='${data.date}'`, `game_hour='${data.hour}'`]);
+
+    if (
+      gameAtSameTime.find(
+        (x) =>
+          x.home_team_id === data.home_team_id ||
+          x.away_team_id === data.away_team_id
+      )
+    ) {
+      message += "One or Both teams already embedded  in this time.\n";
+    }
+    if (gameAtSameTime.find((x) => x.field === data.field)) {
+      message += "The field already embedded in this time";
+    }
+    return message;
+  }catch{return "adding game faild"}
   }
-  if (gameAtSameTime.find((x) => x.field === data.field)) {
-    message += "The field already embedded in this time";
-  }
-  return message;
-}
+
 //in use
 async function getAllLeagueGames() {
   try {
     const games = await data_utils.getFromTable("dbo.games", ["*"]);
-    // const games = await DButils.execQuery(`select * from dbo.games `);
     return games;
   } catch {
     return false;
@@ -239,9 +221,6 @@ async function checkIFPlayerInGame(game_id, player_id) {
       ["home_team_id", "away_team_id"],
       [`game_id = ${game_id_num}`]
     );
-    // const gameDetails = await DButils.execQuery(
-    //   `SELECT home_team_id, away_team_id from dbo.games WHERE game_id = ${game_id_num}`
-    // );
     if (gameDetails[0]) {
       const home_team_id = gameDetails[0].home_team_id;
       const away_team_id = gameDetails[0].away_team_id;
@@ -264,7 +243,7 @@ async function checkIFPlayerInGame(game_id, player_id) {
 exports.AddGame = AddGame;
 exports.AddScoresToGame = AddScoresToGame;
 exports.checkIfGameOccur = checkIfGameOccur;
-exports.getGamesInfo = getGamesInfo;
+// exports.getGamesInfo = getGamesInfo;
 exports.getGameDetaildByID = getGameDetaildByID;
 exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
