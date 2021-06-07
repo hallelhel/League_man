@@ -108,10 +108,7 @@ async function getTeamGames(team_id) {
 //in use
 async function checkIfTeamExist(team_id) {
   try {
-    const team = await data_utils.getFromSoccerAPI(
-      `teams/${team_id}`,
-      "league"
-    );
+    const team = await data_utils.getFromSoccerAPI(`teams/${team_id}`,"league");
     // const team = await axios.get(`${api_domain}/teams/${team_id}`, {
     //   params: {
     //     include: "league",

@@ -77,11 +77,11 @@ app.use(function (req, res, next) {
 app.get("/alive", (req, res) => res.send("I'm alive"));
 
 // Routings
-app.use("/user", users);
-app.use("/league", league);
-app.use("/team", teams);
-app.use("/Game", Game);
-app.use("/Player", players);
+app.use("/users", users);
+// app.use("/league", league);
+// app.use("/team", teams);
+app.use("/games", Game);
+// app.use("/Player", players);
 app.use(auth);
 
 app.use(function (err, req, res, next) {

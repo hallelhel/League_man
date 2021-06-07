@@ -11,7 +11,7 @@ router.post("/register", async (req, res, next) => {
     // valid parameters
     // username exists
 
-    let users = await data_utils.getFromTable('dbo.Users', ['username']);
+    let users = await data_utils.getFromTable("dbo.Users", ["username"]);
     if (users.find((x) => x.username === req.body.username))
       throw { status: 409, message: "Username taken" };
 
@@ -35,7 +35,8 @@ router.post("/register", async (req, res, next) => {
 
 router.post("/login", async (req, res, next) => {
   try {
-    let user = await data_utils.getFromTable('dbo.Users', ['*'],[`username='${req.body.username}'`])[0]
+    let user = await data_utils.getFromTable('dbo.Users', ['*'],[`username='${req.body.username}'`])
+    user = user[0]
     // const user = (
     //   await DButils.execQuery(
     //     `SELECT * FROM dbo.Users WHERE username = '${req.body.username}'`
