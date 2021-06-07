@@ -1,9 +1,9 @@
 var express = require("express");
 var router = express.Router();
-const DButils = require("../Data_Layer/DButils");
+// const DButils = require("../Data_Layer/DButils");
 const users_utils = require("./utils/users_utils");
-const players_utils = require("./utils/players_utils");
-const favorites_utils = require("./utils/favorites_utils");
+// const players_utils = require("./utils/players_utils");
+// const favorites_utils = require("./utils/favorites_utils");
 const { send } = require("process");
 const data_utils = require("../Data_Layer/sqlScripts");
 
@@ -33,7 +33,8 @@ router.use(async function (req, res, next) {
  */
 router.get("/allUsersDetails", async (req, res, next) => {
   if (req.session.username != "admin") {
-    res.send("user un Aouthorized");
+    res.status(400).send("user un Aouthorized");
+    return;
   }
   //return all users in system details
   try {

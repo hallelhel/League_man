@@ -1,10 +1,9 @@
-const DButils = require("../../Data_Layer/DButils");
+// const DButils = require("../../Data_Layer/DButils");
 const data_utils = require("../../Data_Layer/sqlScripts");
 //in use
 
 async function getAllUsers() {
   const users = await data_utils.getFromTable("dbo.Users", ["*"]);
-  // const users = await DButils.execQuery("select * from dbo.Users");
   return users;
 }
 //in use
@@ -14,13 +13,10 @@ async function getUserDetails(username) {
     ["*"],
     [`username='${username}'`]
   );
-  // const user = await DButils.execQuery(
-  //   `select * from dbo.Users WHERE username='${username}'`
-  // );
   return user;
 }
 
-
+//in use
 exports.generateText= (name, age) => {
   // Returns output text
   

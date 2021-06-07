@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const games_utils = require("./utils/games_utils");
-const DButils = require("../Data_Layer/DButils");
+// const DButils = require("../Data_Layer/DButils");
 const team_utils = require("./utils/teams_utils");
 const data_utils = require("../Data_Layer/sqlScripts");
 
@@ -43,14 +43,14 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
       data.date,
       data.hour
     );
-    const homeTeamCheck = await team_utils.checkIfTeamExist(data.home_team_id);
-    const awayTeamCheck = await team_utils.checkIfTeamExist(data.away_team_id);
+    let homeTeamCheck = await team_utils.checkIfTeamExist(data.home_team_id);
+    let awayTeamCheck = await team_utils.checkIfTeamExist(data.away_team_id);
     if (!homeTeamCheck || !awayTeamCheck) {
       res.status(400).send("One or both team details are incorrect");
       return;
     }
     if (confirmDate) {
-      const checkGame = await games_utils.checkGameDetails(data);
+      let checkGame = await games_utils.checkGameDetails(data);
       if (checkGame !== "") {
         res.status(400).send(checkGame);
         return;
