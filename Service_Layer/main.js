@@ -11,8 +11,8 @@ const session = require("client-sessions");
 var logger = require("morgan");
 var cors = require("cors");
 
-const {generateText} = require('../Domain_Layer/utils/users_utils');
-const {getFromTable} = require('../Data_Layer/sqlScripts');
+const { generateText } = require("../Domain_Layer/utils/users_utils");
+const { getFromTable } = require("../Data_Layer/sqlScripts");
 
 var app = express();
 app.use(logger("dev")); //logger
@@ -50,11 +50,11 @@ app.options("*", cors(corsConfig));
 
 const port = process.env.PORT || "3001";
 
-const auth = require("../Domain_Layer/auth");
-const users = require("../Domain_Layer/users");
+const auth = require("../Service_Layer/authService");
+const users = require("../Service_Layer/usersService");
 const league = require("../Domain_Layer/league");
 const teams = require("../Domain_Layer/teams");
-const Game = require("../Domain_Layer/games");
+const Game = require("../Service_Layer/gamesService");
 const players = require("../Domain_Layer/players");
 
 //#endregion

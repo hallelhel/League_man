@@ -4,8 +4,7 @@ var router = express.Router();
 const bcrypt = require("bcryptjs");
 const data_utils = require("../Data_Layer/sqlScripts");
 
-
-router.post("/register", async (req, res, next) => {
+async function registerHundler(req, next) {
   try {
     // parameters exists
     // valid parameters
@@ -13,7 +12,10 @@ router.post("/register", async (req, res, next) => {
 
     let users = await data_utils.getFromTable("dbo.Users", ["username"]);
     if (users.find((x) => x.username === req.body.username))
-      throw { status: 409, message: "Username taken" };
+      return {
+        status: 409,
+        message: "Username taken",
+      };
 
     //hash the password
     let hash_password = bcrypt.hashSync(
@@ -23,50 +25,109 @@ router.post("/register", async (req, res, next) => {
     req.body.password = hash_password;
 
     // add the new username
-    const {username, firstname, lastname, country, password, email, picture, role} = req.body;
-    let status = await data_utils.insertinto('dbo.Users',['username', 'firstname', 'lastname', 'country', 'password', 'email', 'picture'],
-      [username, firstname, lastname, country, password, email, picture]);
-    await data_utils.insertinto('dbo.role',['username','role'],[username, role])
-    if (!status){res.status(400).send("user not created, error")}
-    else{res.status(201).send("user created");}
+    const {
+      username,
+      firstname,
+      lastname,
+      country,
+      password,
+      email,
+      picture,
+      role,
+    } = req.body;
+    let status = await data_utils.insertinto(
+      "dbo.Users",
+      [
+        "username",
+        "firstname",
+        "lastname",
+        "country",
+        "password",
+        "email",
+        "picture",
+      ],
+      [username, firstname, lastname, country, password, email, picture]
+    );
+    await data_utils.insertinto(
+      "dbo.role",
+      ["username", "role"],
+      [username, role]
+    );
+    if (!status) {
+      return {
+        status: 400,
+        message: "user not created, error",
+      };
+    } else {
+      return {
+        status: 201,
+        message: "user created",
+      };
+    }
   } catch (error) {
     next(error);
   }
-});
+}
 
-router.post("/login", async (req, res, next) => {
+async function loginHundler(req, next) {
   try {
-    let user = await data_utils.getFromTable('dbo.Users', ['*'],[`username='${req.body.username}'`])
-    user = user[0]
+    let user = await data_utils.getFromTable(
+      "dbo.Users",
+      ["*"],
+      [`username='${req.body.username}'`]
+    );
+    user = user[0];
 
     // check that username exists & the password is correct
     if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
-      throw { status: 401, message: "Username or Password incorrect" };
+      return {
+        status: 401,
+        message: "Username or Password incorrect",
+      };
+      // throw { status: 401, message: "Username or Password incorrect" };
     }
 
     // Set cookie
     try {
       if (req.session.username) {
-        res.status(401).send("User already loged-in");
-        return;
+        return {
+          status: 401,
+          message: "User already loged-in",
+        };
+        // res.status(401).send("User already loged-in");
+        // return;
       }
     } catch {}
     req.session.username = user.username;
 
     // return cookie
-    res.status(200).send("login succeeded");
+    return {
+      status: 200,
+      message: "login succeeded",
+    };
+    // res.status(200).send("login succeeded");
   } catch (error) {
     next(error);
   }
-});
+}
 
-router.post("/user/logOut", function (req, res) {
+function logoutHundler(req) {
   if (req.session.username) {
     req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
-    res.status(200).send({ success: true, message: "logout succeeded" });
+    return {
+      status: 200,
+      message: "logout succeeded",
+    };
+    // res.status(200).send({ success: true, message: "logout succeeded" });
   } else {
-    res.status(400).send({ success: false, message: "No user to logout." });
+    return {
+      status: 400,
+      message: "No user to logout.",
+    };
+    // res.status(400).send({ success: false, message: "No user to logout." });
   }
-});
+}
 
-module.exports = router;
+exports.logoutHundler = logoutHundler;
+exports.loginHundler = loginHundler;
+exports.registerHundler = registerHundler;

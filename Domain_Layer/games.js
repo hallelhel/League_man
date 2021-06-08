@@ -5,38 +5,51 @@ const games_utils = require("./utils/games_utils");
 const team_utils = require("./utils/teams_utils");
 const data_utils = require("../Data_Layer/sqlScripts");
 
-router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
+async function gameReviewHundler(req, next) {
   try {
     const game_info = await games_utils.getGameDetaildByID(req.params.gameID);
     if (!game_info) {
       //game not exist in DB
-      res.send("There is no game with ID " + req.params.gameID);
+      return {
+        status: 400,
+        message: `There is no game with ID ${req.params.gameID}`,
+      };
+      // res.send("There is no game with ID " + req.params.gameID);
     } else {
-      res.send(game_info);
+      return {
+        status: 200,
+        message: game_info,
+      };
+      // res.send(game_info);
     }
   } catch (error) {
     next(error);
   }
-});
+}
 
-router.use(async function (req, res, next) {
+async function authnticateLeagueManager(req, next) {
   if (req.session && req.session.username === "admin") {
     //clieant verification
-    data_utils.getFromTable('dbo.Users',['username'])
-    // DButils.execQuery("SELECT username FROM dbo.Users")
+    data_utils
+      .getFromTable("dbo.Users", ["username"])
+      // DButils.execQuery("SELECT username FROM dbo.Users")
       .then((users) => {
-        if (users.find((x) => (x.username === req.session.username))) {
+        if (users.find((x) => x.username === req.session.username)) {
           req.username = req.session.username;
           next();
         }
       })
       .catch((err) => next(err));
   } else {
-    res.status(401).send("Only referee can modify games in league");
+    return {
+      status: 401,
+      message: "Only referee can modify games in league",
+    };
+    // res.status(401).send("Only referee can modify games in league");
   }
-});
+}
 
-router.post("/LeagueManagment/addGame", async (req, res, next) => {
+async function addGameHundler(req, next) {
   try {
     data = await req.body;
     const confirmDate = games_utils.checkIfGameDetailsInFuture(
@@ -46,7 +59,11 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
     let homeTeamCheck = await team_utils.checkIfTeamExist(data.home_team_id);
     let awayTeamCheck = await team_utils.checkIfTeamExist(data.away_team_id);
     if (!homeTeamCheck || !awayTeamCheck) {
-      res.status(400).send("One or both team details are incorrect");
+      return {
+        status: 400,
+        message: "One or both team details are incorrect",
+      };
+      // res.status(400).send("One or both team details are incorrect");
       return;
     }
     if (confirmDate) {
@@ -56,20 +73,36 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
         return;
       }
       let status = await games_utils.AddGame(data);
-      if(status){
-        res.status(200).send("Game added successfuly");
+      if (status) {
+        return {
+          status: 200,
+          message: "Game added successfuly",
+        };
+        // res.status(200).send("Game added successfuly");
         return;
+      } else {
+        return {
+          status: 400,
+          message: "Game adding failed",
+        };
+        // res.status(400).send("Game adding failed");
       }
-      else{res.status(400).send("Game adding failed");}
-      
     } else {
       // issues with date
-      res.status(400).send("The game date is invalid");
+      return {
+        status: 400,
+        message: "The game date is invalid",
+      };
+      // res.status(400).send("The game date is invalid");
     }
   } catch (error) {
     next(error);
   }
-});
+}
+
+exports.gameReviewHundler = gameReviewHundler;
+exports.authnticateLeagueManager = authnticateLeagueManager;
+exports.addGameHundler = addGameHundler;
 
 //old project
 // router.post("/LeagueManagment/addScore", async (req, res, next) => {
@@ -116,4 +149,4 @@ router.post("/LeagueManagment/addGame", async (req, res, next) => {
 //   }
 // });
 
-module.exports = router;
+// module.exports = router;

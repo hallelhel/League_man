@@ -106,11 +106,13 @@ const data_utils = require("../../Data_Layer/sqlScripts");
 //   return TeamGames;
 // }
 
-
 //in use
 async function checkIfTeamExist(team_id) {
   try {
-    const team = await data_utils.getFromSoccerAPI(`teams/${team_id}`,"league");
+    const team = await data_utils.getFromSoccerAPI(
+      `teams/${team_id}`,
+      "league"
+    );
     // const team = await axios.get(`${api_domain}/teams/${team_id}`, {
     //   params: {
     //     include: "league",
@@ -126,10 +128,9 @@ async function checkIfTeamExist(team_id) {
   }
 }
 
-
 //in use
 async function getTeamNameById(team_id) {
-  const team = await data_utils.getFromSoccerAPI(`teams/${team_id}`)
+  const team = await data_utils.getFromSoccerAPI(`teams/${team_id}`);
   return team.data.data.name;
 }
 
@@ -200,7 +201,7 @@ async function getTeamNameById(team_id) {
 // exports.getTeamsInfo = getTeamsInfo;
 // exports.extractTeamDetails = extractTeamDetails;
 // exports.getTeamGames = getTeamGames;
-exports.getTeamByName = getTeamByName;
+// exports.getTeamByName = getTeamByName;
 // exports.checkTeamLeague = checkTeamLeague;
 exports.checkIfTeamExist = checkIfTeamExist;
 exports.getTeamNameById = getTeamNameById;
