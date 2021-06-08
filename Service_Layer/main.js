@@ -53,7 +53,7 @@ const port = process.env.PORT || "3001";
 const auth = require("../Service_Layer/authService");
 const users = require("../Service_Layer/usersService");
 const Game = require("../Service_Layer/gamesService");
-
+const Game = require("../Service_Layer/gamesService");
 
 //#endregion
 
