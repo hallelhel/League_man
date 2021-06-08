@@ -1,6 +1,6 @@
 
 function getTeam939(){
-
+    
     return{status : 200 , statusText : "OK"
     ,
     headers: {
@@ -6909,4 +6909,6 @@ function getTeam939(){
     
   
 }
-module.exports = router;
+
+
+exports.getTeam939 = getTeam939;
