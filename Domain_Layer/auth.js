@@ -83,6 +83,7 @@ async function loginHundler(reqBody, sessionUser, next) {
       return {
         status: 401,
         message: "Username or Password incorrect",
+        session: sessionUser,
       };
       // throw { status: 401, message: "Username or Password incorrect" };
     }
@@ -93,6 +94,7 @@ async function loginHundler(reqBody, sessionUser, next) {
         return {
           status: 401,
           message: "User already loged-in",
+          session: sessionUser,
         };
         // res.status(401).send("User already loged-in");
         // return;
@@ -104,6 +106,7 @@ async function loginHundler(reqBody, sessionUser, next) {
     return {
       status: 200,
       message: "login succeeded",
+      session: sessionUser,
     };
     // res.status(200).send("login succeeded");
   } catch (error) {

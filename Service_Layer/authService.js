@@ -18,6 +18,7 @@ router.post("/login", async (req, res, next) => {
   const reqBody = req.body;
   const sessionUser = req.session.username;
   const result = await auth.loginHundler(reqBody, sessionUser, next);
+  req.session.username = result.session;
   res.status(result.status).send(result.message);
 });
 
