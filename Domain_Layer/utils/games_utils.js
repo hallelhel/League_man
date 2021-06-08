@@ -1,18 +1,6 @@
-// const axios = require("axios");
-// const DButils = require("../../Data_Layer/DButils");
 const team_utils = require("./teams_utils");
 const data_utils = require("../../Data_Layer/sqlScripts");
 
-// const api_domain = "https://soccer.sportmonks.com/api/v2.0";
-
-// async function getGamesInfo(games_ids_list) {
-//   //return list of games info
-//   // we remove the await
-//   let promises = [];
-//   games_ids_list.map((row) => promises.push(getGameDetaildByID(row.gameID)));
-//   let games_info = await Promise.all(promises);
-//   return games_info;
-// }
 //in use
 async function AddGame(data) {
   try {
@@ -232,7 +220,6 @@ async function checkGameDetails(data) {
     return "adding game faild";
   }
 }
-
 //in use
 async function getAllLeagueGames() {
   try {
@@ -273,7 +260,6 @@ async function checkIFPlayerInGame(game_id, player_id) {
 exports.AddGame = AddGame;
 exports.AddScoresToGame = AddScoresToGame;
 exports.checkIfGameOccur = checkIfGameOccur;
-// exports.getGamesInfo = getGamesInfo;
 exports.getGameDetaildByID = getGameDetaildByID;
 exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;

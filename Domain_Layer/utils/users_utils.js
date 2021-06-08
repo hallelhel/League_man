@@ -1,4 +1,3 @@
-// const DButils = require("../../Data_Layer/DButils");
 const data_utils = require("../../Data_Layer/sqlScripts");
 //in use
 
@@ -23,11 +22,6 @@ exports.generateText= (name, age) => {
   return `${name} (${age} years old)`;
 };
 
-
-
-// // async function getUserFavoriteGames(){
-// //   return await DButils.execQuery(`select * from dbo.userFavoriteGames`);
-// // }
 
 
 exports.getAllUsers = getAllUsers;
