@@ -2,7 +2,7 @@
 const { test, expect } = require('@jest/globals');
 const {checkIfGameDetailsInFuture} = require('../Domain_Layer/utils/games_utils');
 const {checkGameDetails} = require('../Domain_Layer/utils/games_utils');
-
+const {checkIfTeamExist} = require('../Domain_Layer/utils/teams_utils');
 
 test('check test unit game', () =>{
     const testBadDate = checkIfGameDetailsInFuture('2021-5-31', '20:30:00');
@@ -16,6 +16,7 @@ test('check test unit game', () =>{
     // const testGoodTime = checkIfGameDetailsInFuture('2022-6-7', '21:30:00');
     // expect(testGoodTime).toBe(true);
 });
+
 
 // test('check game details', () =>{
 //     const testGoodGameDetailes = checkGameDetails({away_team_id: 939, date: '2022-5-31',

@@ -200,7 +200,7 @@ async function getTeamNameById(team_id) {
 // exports.getTeamsInfo = getTeamsInfo;
 // exports.extractTeamDetails = extractTeamDetails;
 // exports.getTeamGames = getTeamGames;
-exports.getTeamByName = getTeamByName;
+//exports.getTeamByName = getTeamByName;
 // exports.checkTeamLeague = checkTeamLeague;
 exports.checkIfTeamExist = checkIfTeamExist;
 exports.getTeamNameById = getTeamNameById;
