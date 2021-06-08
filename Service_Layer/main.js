@@ -52,9 +52,9 @@ const port = process.env.PORT || "3001";
 
 const auth = require("../Service_Layer/authService");
 const users = require("../Service_Layer/usersService");
-const league = require("../Domain_Layer/league");
+// const league = require("../Domain_Layer/league");
 const Game = require("../Service_Layer/gamesService");
-const players = require("../Domain_Layer/players");
+// const players = require("../Domain_Layer/players");
 
 //#endregion
 
@@ -80,7 +80,7 @@ app.get("/alive", (req, res) => res.send("I'm alive"));
 
 // Routings
 app.use("/users", users);
-\app.use("/games", Game);
+app.use("/games", Game);
 app.use(auth);
 
 app.use(function (err, req, res, next) {
