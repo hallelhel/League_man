@@ -4,14 +4,14 @@ var router = express.Router();
 const bcrypt = require("bcryptjs");
 const data_utils = require("../Data_Layer/sqlScripts");
 
-async function registerHundler(req, next) {
+async function registerHundler(reqBody, next) {
   try {
     // parameters exists
     // valid parameters
     // username exists
 
     let users = await data_utils.getFromTable("dbo.Users", ["username"]);
-    if (users.find((x) => x.username === req.body.username))
+    if (users.find((x) => x.username === reqBody.username))
       return {
         status: 409,
         message: "Username taken",
@@ -19,10 +19,10 @@ async function registerHundler(req, next) {
 
     //hash the password
     let hash_password = bcrypt.hashSync(
-      req.body.password,
+      reqBody.password,
       parseInt(process.env.bcrypt_saltRounds)
     );
-    req.body.password = hash_password;
+    reqBody.password = hash_password;
 
     // add the new username
     const {
@@ -34,7 +34,7 @@ async function registerHundler(req, next) {
       email,
       picture,
       role,
-    } = req.body;
+    } = reqBody;
     let status = await data_utils.insertinto(
       "dbo.Users",
       [
@@ -69,17 +69,17 @@ async function registerHundler(req, next) {
   }
 }
 
-async function loginHundler(req, next) {
+async function loginHundler(reqBody, sessionUser, next) {
   try {
     let user = await data_utils.getFromTable(
       "dbo.Users",
       ["*"],
-      [`username='${req.body.username}'`]
+      [`username='${reqBody.username}'`]
     );
     user = user[0];
 
     // check that username exists & the password is correct
-    if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+    if (!user || !bcrypt.compareSync(reqBody.password, user.password)) {
       return {
         status: 401,
         message: "Username or Password incorrect",
@@ -89,7 +89,7 @@ async function loginHundler(req, next) {
 
     // Set cookie
     try {
-      if (req.session.username) {
+      if (sessionUser) {
         return {
           status: 401,
           message: "User already loged-in",
@@ -98,7 +98,7 @@ async function loginHundler(req, next) {
         // return;
       }
     } catch {}
-    req.session.username = user.username;
+    sessionUser = user.username;
 
     // return cookie
     return {
@@ -111,9 +111,9 @@ async function loginHundler(req, next) {
   }
 }
 
-function logoutHundler(req) {
-  if (req.session.username) {
-    req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
+function logoutHundler(sessionUser) {
+  if (sessionUser.username) {
+    sessionUser.reset(); // reset the session info --> send cookie when  req.session == undefined!!
     return {
       status: 200,
       message: "logout succeeded",

@@ -48,8 +48,8 @@ async function verificationUser(req, next) {
 /**
  * This path gets return all the players in db
  */
-async function usersDetaileHundler(req, next) {
-  if (req.session.username != "admin") {
+async function usersDetaileHundler(sessionUser, next) {
+  if (sessionUser != "admin") {
     return {
       status: 400,
       message: "User Aouthorized",
@@ -71,10 +71,10 @@ async function usersDetaileHundler(req, next) {
   }
 }
 
-async function userDetailHundler(req, next) {
+async function userDetailHundler(sessionUser, next) {
   //return the user details
   try {
-    const username = req.session.username;
+    const username = sessionUser;
     // const user_id = "noam"
     let usersDetails = {};
     usersDetails = await users_utils.getUserDetails(username);

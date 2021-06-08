@@ -5,9 +5,9 @@ const games_utils = require("./utils/games_utils");
 const team_utils = require("./utils/teams_utils");
 const data_utils = require("../Data_Layer/sqlScripts");
 
-async function gameReviewHundler(req, next) {
+async function gameReviewHundler(gameId, next) {
   try {
-    const game_info = await games_utils.getGameDetaildByID(req.params.gameID);
+    const game_info = await games_utils.getGameDetaildByID(gameId);
     if (!game_info) {
       //game not exist in DB
       return {
@@ -51,7 +51,7 @@ async function authnticateLeagueManager(req, next) {
 
 async function addGameHundler(req, next) {
   try {
-    data = await req.body;
+    data = reqBody;
     const confirmDate = games_utils.checkIfGameDetailsInFuture(
       data.date,
       data.hour
@@ -64,13 +64,17 @@ async function addGameHundler(req, next) {
         message: "One or both team details are incorrect",
       };
       // res.status(400).send("One or both team details are incorrect");
-      return;
+      // return;
     }
     if (confirmDate) {
       let checkGame = await games_utils.checkGameDetails(data);
       if (checkGame !== "") {
-        res.status(400).send(checkGame);
-        return;
+        return {
+          status: 400,
+          message: checkGame,
+        };
+        // res.status(400).send(checkGame);
+        // return;
       }
       let status = await games_utils.AddGame(data);
       if (status) {
@@ -79,7 +83,7 @@ async function addGameHundler(req, next) {
           message: "Game added successfuly",
         };
         // res.status(200).send("Game added successfuly");
-        return;
+        // return;
       } else {
         return {
           status: 400,

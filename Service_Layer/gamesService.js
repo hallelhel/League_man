@@ -3,7 +3,8 @@ var router = express.Router();
 const games = require("../Domain_Layer/games");
 
 router.get(`/GameDocumentation/:gameID`, async (req, res, next) => {
-  const result = await games.gameReviewHundler(req, next);
+  const gameId = req.params.gameID;
+  const result = await games.gameReviewHundler(gameId, next);
   res.status(result.status).send(result.message);
 });
 
@@ -15,7 +16,8 @@ router.use(async function (req, res, next) {
 });
 
 router.post("/LeagueManagment/addGame", async (req, res, next) => {
-  const result = await games.addGameHundler(req, next);
+  const reqBody = await req.body;
+  const result = await games.addGameHundler(reqBody, next);
   res.status(result.status).send(result.message);
 });
 

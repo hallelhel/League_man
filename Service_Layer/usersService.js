@@ -13,12 +13,14 @@ router.use(async function (req, res, next) {
 });
 
 router.get("/allUsersDetails", async (req, res, next) => {
-  const result = await users.usersDetaileHundler(req, next);
+  const sessionUser = req.session.username;
+  const result = await users.usersDetaileHundler(sessionUser, next);
   res.status(result.status).send(result.message);
 });
 
 router.get("/userDetails", async (req, res, next) => {
-  const result = await users.userDetailHundler(req, next);
+  const sessionUser = req.session.username;
+  const result = await users.userDetailHundler(resessionUser, next);
   res.status(result.status).send(result.message);
 });
 
