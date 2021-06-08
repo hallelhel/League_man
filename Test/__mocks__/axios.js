@@ -1,4 +1,4 @@
- const object = require('.')
+ const object = require('./mock_object')
 // const get = url => {
 //     return Promise.resolve({ data: { user: {
 //         user_id: 2,
@@ -11,5 +11,7 @@
 //         picture: "path",
 //       } } });
 //   };
-  const checkIfTeamExist(team_id) =>{return object.get}
-  exports.get = get;
+  const getFromSoccerAPI = team_id =>{return Promise.resolve(object.getTeam939());}
+  
+  
+  exports.getFromSoccerAPI = getFromSoccerAPI;
