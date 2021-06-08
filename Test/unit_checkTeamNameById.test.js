@@ -11,18 +11,16 @@ const DButils = require(path.join(__dirname, '../','Domail','../Data_Layer/DButi
 const teams_utils = require("../Domain_Layer/utils/teams_utils");
 
 //pass
-describe('#checkIfTeamExist(team_id)', function() {
+describe('#getTeamNameById(team_id)', function() {
     context('activate function',function(){
         it('team exist', async function(){
-            let res = await teams_utils.checkIfTeamExist(939);
-            expect(res).to.equal(true);
+            let res = await teams_utils.getTeamNameById(939);
+            expect(res).to.equal("Midtjylland");
         })
     })
 });
-
-
 //pass
-describe('#checkIfTeamExist(team_id)', function() {
+describe('#getTeamNameById(team_id)', function() {
     context('activate function',function(){
         it('team not exist', async function(){
             let res = await teams_utils.checkIfTeamExist(2650);
