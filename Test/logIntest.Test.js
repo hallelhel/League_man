@@ -43,7 +43,6 @@ describe('/POST login', function(){
       parseInt(process.env.bcrypt_saltRounds)
     );
     await DButils.execQuery(`INSERT INTO dbo.Users (username, firstname, lastname, country, password, email, picture) VALUES ('testUser', 'aviran', 'giat', 'israel', '${hash_password}', 'kotlar@post.bgu.ac.il', 'path')`);
-    // "INSERT INTO dbo.Users (username, firstname, lastname, country, password, email, picture) VALUES ('noam11', 'aviran', 'giat', 'israel', '$2a$13$CZaoUVxCn8JXBHuy8RjXCuKucVt0tmq2VZglueq6gsqeqGg430oGC', 'kotlar@post.bgu.ac.il', 'path')"
   })
   context('test', function(){
     it('user and password correct', async function() {

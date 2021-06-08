@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-// const DButils = require("../Data_Layer/DButils");
 const bcrypt = require("bcryptjs");
 const data_utils = require("../Data_Layer/sqlScripts");
 
