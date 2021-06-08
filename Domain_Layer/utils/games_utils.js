@@ -18,9 +18,32 @@ async function AddGame(data) {
   try {
     const home_team_name = await team_utils.getTeamNameById(data.home_team_id);
     const away_team_name = await team_utils.getTeamNameById(data.away_team_id);
-    let status = await data_utils.insertinto('dbo.games',['game_date', 'game_hour', 'home_team', 'away_team', 'home_team_id', 'away_team_id', 'field', 'referee_name'],
-      [data.date, data.hour, home_team_name,away_team_name,data.home_team_id,data.away_team_id, data.field, data.referee_username]);
-    if(status){return true;}
+    let status = await data_utils.insertinto(
+      "dbo.games",
+      [
+        "game_date",
+        "game_hour",
+        "home_team",
+        "away_team",
+        "home_team_id",
+        "away_team_id",
+        "field",
+        "referee_name",
+      ],
+      [
+        data.date,
+        data.hour,
+        home_team_name,
+        away_team_name,
+        data.home_team_id,
+        data.away_team_id,
+        data.field,
+        data.referee_username,
+      ]
+    );
+    if (status) {
+      return true;
+    }
     return false;
   } catch (error) {
     return false;
@@ -175,17 +198,22 @@ function checkIfGameDetailsInFuture(date, hour) {
 }
 //in use
 async function checkGameDetails(data) {
-  try{
+  try {
     let message = "";
     let referee_username = data.referee_username;
-    let refereeCheck = await data_utils.getFromTable('dbo.role',
-      ['username','role'],
-      [`username='${referee_username}'`,`role='referee'`]
-    )
-    if(!refereeCheck[0]){return `referee user didn't found on DB`}
-    let gameAtSameTime = await data_utils.getFromTable("dbo.games",
+    let refereeCheck = await data_utils.getFromTable(
+      "dbo.role",
+      ["username", "role"],
+      [`username='${referee_username}'`, `role='referee'`]
+    );
+    if (!refereeCheck[0]) {
+      return `referee user didn't found on DB`;
+    }
+    let gameAtSameTime = await data_utils.getFromTable(
+      "dbo.games",
       ["home_team_id", "away_team_id", "field"],
-      [`game_date ='${data.date}'`, `game_hour='${data.hour}'`]);
+      [`game_date ='${data.date}'`, `game_hour='${data.hour}'`]
+    );
 
     if (
       gameAtSameTime.find(
@@ -200,8 +228,10 @@ async function checkGameDetails(data) {
       message += "The field already embedded in this time";
     }
     return message;
-  }catch{return "adding game faild"}
+  } catch {
+    return "adding game faild";
   }
+}
 
 //in use
 async function getAllLeagueGames() {
