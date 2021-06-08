@@ -19,6 +19,7 @@ router.post("/login", async (req, res, next) => {
   const sessionUser = req.session.username;
   const result = await auth.loginHundler(reqBody, sessionUser, next);
   res.status(result.status).send(result.message);
+  let x = res;
 });
 
 router.post("/user/logOut", async (req, res) => {
