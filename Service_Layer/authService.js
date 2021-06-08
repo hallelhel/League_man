@@ -1,4 +1,9 @@
 var express = require("express");
+const app = express()
+app.listen(3001)
+
+// module.exports = app
+
 var router = express.Router();
 
 const auth = require("../Domain_Layer/auth");
@@ -17,5 +22,9 @@ router.post("/user/logOut", async (req, res) => {
   const result = await auth.logoutHundler(req);
   res.status(result.status).send(result.message);
 });
+
+app.get('/test', async (req, res) => {
+  res.json({message: 'pass!'})
+})
 
 module.exports = router;
