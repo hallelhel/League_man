@@ -1,7 +1,4 @@
-const axios = require("axios");
 const e = require("express");
-const { trace } = require("../teams");
-const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const data_utils = require("../../Data_Layer/sqlScripts");
 
 

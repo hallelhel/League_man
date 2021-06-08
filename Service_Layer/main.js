@@ -53,7 +53,6 @@ const port = process.env.PORT || "3001";
 const auth = require("../Service_Layer/authService");
 const users = require("../Service_Layer/usersService");
 const league = require("../Domain_Layer/league");
-const teams = require("../Domain_Layer/teams");
 const Game = require("../Service_Layer/gamesService");
 const players = require("../Domain_Layer/players");
 
@@ -81,10 +80,7 @@ app.get("/alive", (req, res) => res.send("I'm alive"));
 
 // Routings
 app.use("/users", users);
-// app.use("/league", league);
-// app.use("/team", teams);
-app.use("/games", Game);
-// app.use("/Player", players);
+\app.use("/games", Game);
 app.use(auth);
 
 app.use(function (err, req, res, next) {
@@ -95,9 +91,3 @@ app.use(function (err, req, res, next) {
 const server = app.listen(port, () => {
   console.log(`Server listen on port ${port}`);
 });
-
-// process.on("SIGINT", function () {
-//   if (server) {
-//     server.close(() => console.log("server closed"));
-//   }
-// });
