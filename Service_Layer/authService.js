@@ -28,8 +28,5 @@ router.post("/user/logOut", async (req, res) => {
   res.status(result.status).send(result.message);
 });
 
-// app.get('/test', async (req, res) => {
-//   res.json({message: 'pass!'})
-// })
 
 module.exports = router;

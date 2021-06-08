@@ -30,11 +30,3 @@ describe("check if game in future", function () {
   });
 });
 
-//
-// describe("check if game in future", function () {
-//   it("should return false if game date in the past", () => {
-//     let testInput2 = ["234234", "incorrectArg"];
-//     const result2 = games.checkIfGameDetailsInFuture(...testInput2);
-//     expect(result2).to.be.true;
-//   });
-// });
