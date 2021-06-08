@@ -10,7 +10,7 @@ const data_utils = require("../Data_Layer/sqlScripts");
 /**
  * Authenticate all incoming requests by middleware
  */
-router.use(async function (req, res, next) {
+async function authUserHundler(req, next) {
   if (req.session && req.session.username) {
     //clieant verification
     await data_utils
@@ -24,42 +24,76 @@ router.use(async function (req, res, next) {
       })
       .catch((err) => next(err));
   } else {
-    res.sendStatus(401);
+    return {
+      status: 401,
+      message: "Athentication failed",
+    };
+    // res.sendStatus(401);
   }
-});
+}
+
+async function verificationUser(req, next) {
+  await data_utils
+    .getFromTable("dbo.Users", ["username"])
+    // DButils.execQuery("SELECT username FROM dbo.Users")
+    .then((users) => {
+      if (users.find((x) => x.username === req.session.username)) {
+        req.username = req.session.username;
+        next();
+      }
+    })
+    .catch((err) => next(err));
+}
 
 /**
  * This path gets return all the players in db
  */
-router.get("/allUsersDetails", async (req, res, next) => {
+async function usersDetaileHundler(req, next) {
   if (req.session.username != "admin") {
-    res.status(400).send("user un Aouthorized");
-    return;
+    return {
+      status: 400,
+      message: "User Aouthorized",
+    };
+    // res.status(400).send("user un Aouthorized");
+    // return;
   }
   //return all users in system details
   try {
     let usersDetails = {};
     usersDetails = await users_utils.getAllUsers();
-    res.status(200).send(usersDetails);
+    return {
+      status: 200,
+      message: usersDetails,
+    };
+    // res.status(200).send(usersDetails);
   } catch (error) {
     next(error);
   }
-});
+}
 
-router.get("/userDetails", async (req, res, next) => {
+async function userDetailHundler(req, next) {
   //return the user details
   try {
     const username = req.session.username;
     // const user_id = "noam"
     let usersDetails = {};
     usersDetails = await users_utils.getUserDetails(username);
-    res.status(200).send(usersDetails);
+    return {
+      status: 200,
+      message: usersDetails,
+    };
+    // res.status(200).send(usersDetails);
   } catch (error) {
     next(error);
   }
-});
+}
 
-module.exports = router;
+exports.authUserHundler = authUserHundler;
+exports.usersDetaileHundler = usersDetaileHundler;
+exports.userDetailHundler = userDetailHundler;
+exports.verificationUser = verificationUser;
+
+// module.exports = router;
 
 //old
 // router.post("/favoritePlayers", async (req, res, next) => {
