@@ -33,7 +33,7 @@ const bcrypt = require("bcryptjs");
 describe('/POST register - ok', function(){
   before(async function(){
     await DButils.execQuery(`DELETE FROM Users WHERE username='test'`);
-    
+    await DButils.execQuery(`DELETE FROM role WHERE username='test'`);
   })
   context('test', function(){
     it('user is not in db- register succeed', async function() {
