@@ -14,9 +14,11 @@ const auth = require("../Domain_Layer/auth");
 
 describe('auth register handler', function(){
   before(async function(){
-    await DButils.execQuery(`DELETE FROM Users WHERE username='test'`);
-    await DButils.execQuery(`DELETE FROM role WHERE username='test'`);
-    
+    const res = await DButils.execQuery(`SELECT username FROM Users WHERE username='testUserRegister'`);
+    if(res[0]){
+      await DButils.execQuery(`DELETE FROM Users WHERE username='testUserRegister'`);
+      await DButils.execQuery(`DELETE FROM role WHERE username='testUserRegister'`);
+    }
   })
   context('test auth userRegister handler', function(){
     it('user is not in db- register succeed', async function() {
@@ -48,7 +50,7 @@ describe('auth register handler', function(){
       }
       const value = await auth.registerHundler(
         {
-          username: "test",
+          username: "testUserRegister",
           firstname: "test",
           lastname: "test",
           country: "test",
@@ -62,9 +64,56 @@ describe('auth register handler', function(){
       expect(value.message).to.equal("user created");
         })
   })
+  after(async function(){
+    const res = await DButils.execQuery(`SELECT username FROM Users WHERE username='testUserRegister'`);
+    if(res[0]){
+      await DButils.execQuery(`DELETE FROM Users WHERE username='testUserRegister'`);
+      await DButils.execQuery(`DELETE FROM role WHERE username='testUserRegister'`);
+    }
+  })
 })
 
 describe('auth register handler', function(){
+  before(async function(){
+    function next(err) {
+      // signal to exit route
+      if (err && err === 'route') {
+        return done();
+      }
+      
+      // signal to exit router
+      if (err && err === 'router') {
+        return done(err)
+      }
+      
+      var layer = stack[idx++];
+      if (!layer) {
+        return done(err);
+      }
+      
+      if (layer.method && layer.method !== method) {
+        return next(err);
+      }
+      
+      if (err) {
+        layer.handle_error(err, req, res, next);
+      } else {
+        layer.handle_request(req, res, next);
+      }
+    }
+    const value = await auth.registerHundler(
+      {
+        username: "testUserRegister2",
+        firstname: "test",
+        lastname: "test",
+        country: "test",
+        password: "test",
+        email: "test@test.test",
+        picture: "test",
+        role: "test",
+      },
+      next);
+  })
   context('test auth userRegister handler', function(){
     it('user taken- register fail', async function() {
       function next(err) {
@@ -95,7 +144,7 @@ describe('auth register handler', function(){
       }
       const value = await auth.registerHundler(
         {
-          username: "test",
+          username: "testUserRegister2",
           firstname: "test",
           lastname: "test",
           country: "test",
@@ -108,6 +157,13 @@ describe('auth register handler', function(){
       expect(value.status).to.equal(409)
       expect(value.message).to.equal("Username taken");
         })
+  })
+  after(async function(){
+    const res = await DButils.execQuery(`SELECT username FROM Users WHERE username='testUserRegister2'`);
+    if(res[0]){
+      await DButils.execQuery(`DELETE FROM Users WHERE username='testUserRegister2'`);
+      await DButils.execQuery(`DELETE FROM role WHERE username='testUserRegister2'`);
+    }
   })
 })
 
