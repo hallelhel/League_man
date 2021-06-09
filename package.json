@@ -20,10 +20,13 @@
     "test": "^0.6.0"
   },
   "devDependencies": {
-    "mocha": "^9.0.0"
+    "coveralls": "^3.1.0",
+    "mocha": "^9.0.0",
+    "nyc": "^15.1.0"
   },
   "scripts": {
-    "test": "mocha --timeout 10000"
+    "test": "nyc --reporter=html --reporter=text mocha"
+    
   },
   "repository": {
     "type": "git",
@@ -36,5 +39,4 @@
     "url": "https://github.com/hallelhel/League_man/issues"
   },
   "homepage": "https://github.com/hallelhel/League_man#readme"
-
 }
