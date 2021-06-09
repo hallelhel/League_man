@@ -4,25 +4,25 @@ const games_utils = require("./utils/games_utils");
 const team_utils = require("./utils/teams_utils");
 const data_utils = require("../Data_Layer/sqlScripts");
 
-async function gameReviewHundler(gameId, next) {
-  try {
-    const game_info = await games_utils.getGameDetaildByID(gameId);
-    if (!game_info) {
-      //game not exist in DB
-      return {
-        status: 400,
-        message: `There is no game with ID ${req.params.gameID}`,
-      };
-    } else {
-      return {
-        status: 200,
-        message: game_info,
-      };
-    }
-  } catch (error) {
-    next(error);
-  }
-}
+// async function gameReviewHundler(gameId, next) {
+//   try {
+//     const game_info = await games_utils.getGameDetaildByID(gameId);
+//     if (!game_info) {
+//       //game not exist in DB
+//       return {
+//         status: 400,
+//         message: `There is no game with ID ${req.params.gameID}`,
+//       };
+//     } else {
+//       return {
+//         status: 200,
+//         message: game_info,
+//       };
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 
 async function authnticateLeagueManager(req, next) {
   if (req.session && req.session.username === "admin") {
