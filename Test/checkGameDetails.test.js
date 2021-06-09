@@ -10,19 +10,20 @@ const DButils = require(path.join(__dirname, '../','Domail','../Data_Layer/DButi
 const games_utils = require("../Domain_Layer/utils/games_utils");
 
 //pass
-describe('#checkGameDetails(data)', function() {
+describe('checkGameDetails(data)', function() {
     context('activate function',function(){
         it('game data', async function(){
-            data = {
-                    "date": "2021-5-31",
-                    "hour": "20:30:00",
-                    "away_team_id": 939,
-                    "home_team_id": 1020,
-                    "field": "Tedi",
-                    "referee_username": "noam"
+            data = 
+                  {
+                    date: "2022-5-29",
+                    hour: "20:30:00",
+                    away_team_id: 939,
+                    home_team_id: 1020,
+                    field: "Tedi",
+                    referee_username: "noam",
                   }
             let res = await games_utils.checkGameDetails(data);
-            expect(res).to.equal("adding game faild");
+            expect(res).to.equal(`One or Both teams already embedded  in this time.\nThe field already embedded in this time`);
         })
     })
 });

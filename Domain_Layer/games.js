@@ -44,7 +44,7 @@ async function authnticateLeagueManager(req, next) {
   }
 }
 
-async function addGameHundler(req, next) {
+async function addGameHundler(reqBody, next) {
   try {
     data = reqBody;
     const confirmDate = games_utils.checkIfGameDetailsInFuture(

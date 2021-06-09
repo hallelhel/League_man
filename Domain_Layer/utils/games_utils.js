@@ -37,56 +37,7 @@ async function AddGame(data) {
     return false;
   }
 }
-//in use
-async function AddScoresToGame(gameId, homeGoal, awayGoal) {
-  try {
-    data_utils.updateTable(
-      "dbo.games",
-      [`home_team_goal = ${homeGoal}`, `away_team_goal =${awayGoal}`],
-      [`game_id = ${gameId}`]
-    );
-  } catch (error) {
-    error;
-  }
-}
-//in use
-function convertDateAndHour(date, hour) {
-  let game_hour = String(hour).slice(16, 25);
-  let game_date = String(date).slice(0, 15);
-  return {
-    date: game_date,
-    hour: game_hour,
-  };
-}
-//in use
-async function checkIfGameOccur(game_id) {
-  game_id_num = Number(game_id);
-  const gameDetails = await data_utils.getFromTable(
-    "dbo.games",
-    ["game_date", "game_hour"],
-    [`game_id = ${game_id_num}`]
-  );
-  if (gameDetails[0]) {
-    const date_hour_convert = convertDateAndHour(
-      gameDetails[0].game_date,
-      gameDetails[0].game_hour
-    );
-    const gameInFuture = checkIfGameDetailsInFuture(
-      date_hour_convert.date,
-      date_hour_convert.hour
-    );
-    // const gameInFuture = checkIfGameDetailsInFuture(
-    //   gameDetails[0].game_date,
-    //   gameDetails[0].game_hour
-    // );
 
-    if (gameInFuture) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-}
 //in use
 async function getGameDetaildByID(game_id) {
   const game = await data_utils.getFromTable(
@@ -142,26 +93,7 @@ async function getGameDetaildByID(game_id) {
     return "Game does not exist in DB";
   }
 }
-//in use
-async function AddEventToGame(data) {
-  try {
-    const { game_id, date, hour, game_minute, event_type, player_id } = data;
-    data_utils.insertinto(
-      "dbo.ScheduleEvents",
-      [
-        "game_id",
-        "event_date",
-        "event_hour",
-        "game_minute",
-        "event_type",
-        "player_id",
-      ],
-      [game_id, date1, hour1, game_minute, event_type, player_id]
-    );
-  } catch (error) {
-    error;
-  }
-}
+
 //in use
 function checkIfGameDetailsInFuture(date, hour) {
   let check;
@@ -220,49 +152,114 @@ async function checkGameDetails(data) {
     return "adding game faild";
   }
 }
-//in use
-async function getAllLeagueGames() {
-  try {
-    const games = await data_utils.getFromTable("dbo.games", ["*"]);
-    return games;
-  } catch {
-    return false;
-  }
-}
-//in use
-async function checkIFPlayerInGame(game_id, player_id) {
-  try {
-    game_id_num = Number(game_id);
-    const gameDetails = await data_utils.getFromTable(
-      "dbo.games",
-      ["home_team_id", "away_team_id"],
-      [`game_id = ${game_id_num}`]
-    );
-    if (gameDetails[0]) {
-      const home_team_id = gameDetails[0].home_team_id;
-      const away_team_id = gameDetails[0].away_team_id;
-      const playerExist = await team_utils.checkPlayerInTeam(
-        player_id,
-        home_team_id,
-        away_team_id
-      );
-      if (playerExist) {
-        return true;
-      }
-      return false;
-    }
-    return false;
-  } catch {
-    return false;
-  }
-}
+// //not use
+// async function getAllLeagueGames() {
+//   try {
+//     const games = await data_utils.getFromTable("dbo.games", ["*"]);
+//     return games;
+//   } catch {
+//     return false;
+//   }
+// }
+// //not use
+// async function checkIFPlayerInGame(game_id, player_id) {
+//   try {
+//     game_id_num = Number(game_id);
+//     const gameDetails = await data_utils.getFromTable(
+//       "dbo.games",
+//       ["home_team_id", "away_team_id"],
+//       [`game_id = ${game_id_num}`]
+//     );
+//     if (gameDetails[0]) {
+//       const home_team_id = gameDetails[0].home_team_id;
+//       const away_team_id = gameDetails[0].away_team_id;
+//       const playerExist = await team_utils.checkPlayerInTeam(
+//         player_id,
+//         home_team_id,
+//         away_team_id
+//       );
+//       if (playerExist) {
+//         return true;
+//       }
+//       return false;
+//     }
+//     return false;
+//   } catch {
+//     return false;
+//   }
+// }
+// async function AddScoresToGame(gameId, homeGoal, awayGoal) {
+//   try {
+//     data_utils.updateTable(
+//       "dbo.games",
+//       [`home_team_goal = ${homeGoal}`, `away_team_goal =${awayGoal}`],
+//       [`game_id = ${gameId}`]
+//     );
+//   } catch (error) {
+//     error;
+//   }
+// }
+// async function AddEventToGame(data) {
+//   try {
+//     const { game_id, date, hour, game_minute, event_type, player_id } = data;
+//     data_utils.insertinto(
+//       "dbo.ScheduleEvents",
+//       [
+//         "game_id",
+//         "event_date",
+//         "event_hour",
+//         "game_minute",
+//         "event_type",
+//         "player_id",
+//       ],
+//       [game_id, date1, hour1, game_minute, event_type, player_id]
+//     );
+//   } catch (error) {
+//     error;
+//   }
+// }
+// async function checkIfGameOccur(game_id) {
+//   game_id_num = Number(game_id);
+//   const gameDetails = await data_utils.getFromTable(
+//     "dbo.games",
+//     ["game_date", "game_hour"],
+//     [`game_id = ${game_id_num}`]
+//   );
+//   if (gameDetails[0]) {
+//     const date_hour_convert = convertDateAndHour(
+//       gameDetails[0].game_date,
+//       gameDetails[0].game_hour
+//     );
+//     const gameInFuture = checkIfGameDetailsInFuture(
+//       date_hour_convert.date,
+//       date_hour_convert.hour
+//     );
+//     // const gameInFuture = checkIfGameDetailsInFuture(
+//     //   gameDetails[0].game_date,
+//     //   gameDetails[0].game_hour
+//     // );
 
+//     if (gameInFuture) {
+//       return false;
+//     } else {
+//       return true;
+//     }
+//   }
+// }
+// function convertDateAndHour(date, hour) {
+//   let game_hour = String(hour).slice(16, 25);
+//   let game_date = String(date).slice(0, 15);
+//   return {
+//     date: game_date,
+//     hour: game_hour,
+//   };
+// }
 exports.AddGame = AddGame;
-exports.AddScoresToGame = AddScoresToGame;
-exports.checkIfGameOccur = checkIfGameOccur;
+// exports.AddScoresToGame = AddScoresToGame;
+// exports.checkIfGameOccur = checkIfGameOccur;
 exports.getGameDetaildByID = getGameDetaildByID;
-exports.AddEventToGame = AddEventToGame;
+// exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
-exports.getAllLeagueGames = getAllLeagueGames;
+//exports.getAllLeagueGames = getAllLeagueGames;
 exports.checkGameDetails = checkGameDetails;
-exports.checkIFPlayerInGame = checkIFPlayerInGame;
+//exports.checkIFPlayerInGame = checkIFPlayerInGame;
