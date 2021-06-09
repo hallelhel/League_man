@@ -24,7 +24,6 @@ const data_utils = require("../Data_Layer/sqlScripts");
 //   }
 // }
 
-
 async function authnticateLeagueManager(req, next) {
   if (req.session && req.session.username === "admin") {
     //clieant verification
@@ -40,7 +39,7 @@ async function authnticateLeagueManager(req, next) {
   } else {
     return {
       status: 401,
-      message: "Only referee can modify games in league",
+      message: "Only admin can modify games in league",
     };
   }
 }
