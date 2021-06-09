@@ -7,11 +7,11 @@ const data_utils = require("../Data_Layer/sqlScripts");
 async function gameReviewHundler(gameId, next) {
   try {
     const game_info = await games_utils.getGameDetaildByID(gameId);
-    if (!game_info) {
+    if (game_info === -1) {
       //game not exist in DB
       return {
         status: 400,
-        message: `There is no game with ID ${req.params.gameID}`,
+        message: `There is no game with ID ${gameId}`,
       };
     } else {
       return {
@@ -46,7 +46,7 @@ async function authnticateLeagueManager(req, next) {
 
 async function addGameHundler(reqBody, next) {
   try {
-    data = reqBody;
+    const data = reqBody;
     const confirmDate = games_utils.checkIfGameDetailsInFuture(
       data.date,
       data.hour

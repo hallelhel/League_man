@@ -13,6 +13,7 @@ const data_utils = require("../Data_Layer/sqlScripts");
 const games = require("../Domain_Layer/games");
 // require(path.join(__dirname, '../','Domain_Layer','../Data_Layer/DButils'));
 const bcrypt = require("bcryptjs");
+const auth = require("../Domain_Layer/auth");
 
 //Testing the function checkIfGameDetailsInFuture(date, hour)
 describe("check if game in future", function () {
@@ -31,50 +32,81 @@ describe("check if game in future", function () {
   });
 });
 
-//Testing gameReview Hundler
-// describe("check the game review", () => {
-//   const testGameInfo = {
-//     date: "2021-7-31",
-//     hour: "22:30:00",
-//     home_team_name: "AaB",
-//     away_team_name: "Midtjylland",
-//     home_team_id: 1020,
-//     away_team_id: 939,
-//     home_team_goal: 2,
-//     away_team_goal: 1,
-//     eventSchedule: {},
-//   };
-//   context("activate-function", function () {
-//     it("should return 200 if the game exist in DB and the details", async function () {
-//       function next(err) {
-//         // signal to exit route
-//         if (err && err === 'route') {
-//           return done();
-//         }
-        
-//         // signal to exit router
-//         if (err && err === 'router') {
-//           return done(err)
-//         }
-        
-//         var layer = stack[idx++];
-//         if (!layer) {
-//           return done(err);
-//         }
-        
-//         if (layer.method && layer.method !== method) {
-//           return next(err);
-//         }
-        
-//         if (err) {
-//           layer.handle_error(err, req, res, next);
-//         } else {
-//           layer.handle_request(req, res, next);
-//         }
-//       }
-//       const result = await games.gameReviewHundler(1,next);
-//       expect(result.status).to.equal(200);
-//       expect(result.message.home_team).to.equal("AaB");
-//     });
-//   });
-// });
+describe("check the game review {Failes}", () => {
+  context("gameReview with fake game id", function () {
+    it("should return 400 if the game exist in DB and the details", async function () {
+      const FakeGameId = 123;
+      const result = await games.gameReviewHundler(FakeGameId);
+      expect(result.status).to.equal(400);
+      expect(result.message).to.equal(`There is no game with ID ${FakeGameId}`);
+    });
+  });
+});
+
+//Testing addGameHundler
+describe("test addGameHundler#1 ", () => {
+  context("send FakeReferee details- should return status 400", function () {
+    it("Should return status 400 ", async function () {
+      const FakeGame = {
+        date: "2021-9-1",
+        hour: "20:30:00",
+        away_team_id: 939,
+        home_team_id: 1020,
+        field: "Tedi",
+        referee_username: "FakeReferee",
+      };
+      const result = await games.addGameHundler(FakeGame);
+      expect(result.status).to.equal(400);
+      after(async function () {
+        await DButils.execQuery(`Delete from dbo.games WHERE game_date='${FakeGame.date}' and game_hour='${FakeGame.hour}' and home_team_id='${FakeGame.home_team_id}' \
+        and away_team_id='${FakeGame.away_team_id}'`);
+      });
+    });
+  });
+});
+
+describe("test addGameHundler#2 ", () => {
+  context("send correct details - should return status 200", function () {
+    it("Should return status 200 ", async function () {
+      const FakeGame = {
+        date: "2021-8-1",
+        hour: "20:30:00",
+        away_team_id: 939,
+        home_team_id: 1020,
+        field: "Tedi",
+        referee_username: "admin",
+      };
+      const result = await games.addGameHundler(FakeGame);
+      expect(result.status).to.equal(200);
+      after(async function () {
+        await DButils.execQuery(`Delete from dbo.games WHERE game_date='${FakeGame.date}' and game_hour='${FakeGame.hour}' and home_team_id='${FakeGame.home_team_id}' \
+        and away_team_id='${FakeGame.away_team_id}'`);
+      });
+    });
+  });
+});
+
+describe("test addGameHundler#3 ", () => {
+  context(
+    "send incorrect date details. Should return status 400 and message- The game date is invalid",
+    function () {
+      it("Should return status 400 ", async function () {
+        const FakeGame = {
+          date: "2020-8-1",
+          hour: "20:30:00",
+          away_team_id: 939,
+          home_team_id: 1020,
+          field: "Tedi",
+          referee_username: "noam",
+        };
+        const result = await games.addGameHundler(FakeGame);
+        expect(result.status).to.equal(400);
+        expect(result.message).to.equal("The game date is invalid");
+        after(async function () {
+          await DButils.execQuery(`Delete from dbo.games WHERE game_date='${FakeGame.date}' and game_hour='${FakeGame.hour}' and home_team_id='${FakeGame.home_team_id}' \
+        and away_team_id='${FakeGame.away_team_id}'`);
+        });
+      });
+    }
+  );
+});
