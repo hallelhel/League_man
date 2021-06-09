@@ -21,20 +21,3 @@ describe('/POST logOut', function(){
         })
   })  
 })
-
-// describe('/POST logOut', function(){
-//   before(async function(){
-//     const res = await chai.request(`${api_domain}`)
-//   .post('/login')
-//   .send({username: "testUser", password: "testPassword"})
-//   })
-//   context('test', function(){
-//     it('user loged in- loged out success', async function() {
-//       const res = await chai.request(`${api_domain}`)
-//       .post('/user/logOut')
-//       // .send(sessionUser='test')
-//       expect(res.status).to.equal(200)
-//       expect(res.text).to.equal('logout succeeded');
-//         })
-//   })  
-//   })

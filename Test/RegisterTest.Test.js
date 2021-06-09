@@ -32,14 +32,17 @@ const bcrypt = require("bcryptjs");
 
 describe('/POST register - ok', function(){
   before(async function(){
-    await DButils.execQuery(`DELETE FROM Users WHERE username='test'`);
-    await DButils.execQuery(`DELETE FROM role WHERE username='test'`);
+    const res = await DButils.execQuery(`SELECT username FROM Users WHERE username='registerTestUser'`);
+    if(res[0]){
+      await DButils.execQuery(`DELETE FROM Users WHERE username='registerTestUser'`);
+      await DButils.execQuery(`DELETE FROM role WHERE username='registerTestUser'`);
+    }
   })
   context('test', function(){
     it('user is not in db- register succeed', async function() {
       const res = await chai.request(`${api_domain}`)
       .post('/register')
-      .send({  username: "test",
+      .send({  username: "registerTestUser",
       firstname: "test",
       lastname: "test",
       country: "test",
@@ -51,25 +54,51 @@ describe('/POST register - ok', function(){
       expect(res.text).to.equal('user created');
         })
   })
+  after(async function(){
+    const res = await DButils.execQuery(`SELECT username FROM Users WHERE username='registerTestUser'`);
+    if(res[0]){
+      await DButils.execQuery(`DELETE FROM Users WHERE username='registerTestUser'`);
+      await DButils.execQuery(`DELETE FROM role WHERE username='registerTestUser'`);
+    }
+  })
 })
 
 describe('/POST register- user name taken', function(){
-    context('test', function(){
-      it('user is in db- register request denied', async function() {
-        const res = await chai.request(`${api_domain}`)
-        .post('/register')
-        .send({  username: "test",
-        firstname: "test",
-        lastname: "test",
-        country: "test",
-        password: "test",
-        email: "test@test.test",
-        picture: "test",
-        role: "test"})
-        expect(res.status).to.equal(409)
-        expect(res.text).to.equal('Username taken');
-          })
-    })
+  before(async function(){
+    const res = await chai.request(`${api_domain}`)
+    .post('/register')
+    .send({  username: "registerTestUser2",
+    firstname: "test",
+    lastname: "test",
+    country: "test",
+    password: "test",
+    email: "test@test.test",
+    picture: "test",
+    role: "test"})
+  })
+  context('test', function(){
+    it('user is in db- register request denied', async function() {
+      const res = await chai.request(`${api_domain}`)
+      .post('/register')
+      .send({  username: "registerTestUser2",
+      firstname: "test",
+      lastname: "test",
+      country: "test",
+      password: "test",
+      email: "test@test.test",
+      picture: "test",
+      role: "test"})
+      expect(res.status).to.equal(409)
+      expect(res.text).to.equal('Username taken');
+        })
+  })
+  after(async function(){
+    const res = await DButils.execQuery(`SELECT username FROM Users WHERE username='registerTestUser2'`);
+    if(res[0]){
+      await DButils.execQuery(`DELETE FROM Users WHERE username='registerTestUser2'`);
+      await DButils.execQuery(`DELETE FROM role WHERE username='registerTestUser2'`);
+    }
+  })
   })
   
 
