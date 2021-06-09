@@ -77,7 +77,7 @@ async function userDetailHundler(sessionUser, next) {
   }
 }
 
-exports.authUserHundler = authUserHundler;
+// exports.authUserHundler = authUserHundler;
 exports.usersDetaileHundler = usersDetaileHundler;
 exports.userDetailHundler = userDetailHundler;
 exports.verificationUser = verificationUser;
