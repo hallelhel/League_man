@@ -15,13 +15,6 @@ async function getUserDetails(username) {
   return user;
 }
 
-//in use
-exports.generateText= (name, age) => {
-  // Returns output text
-  
-  return `${name} (${age} years old)`;
-};
-
 
 
 exports.getAllUsers = getAllUsers;
