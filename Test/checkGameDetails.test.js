@@ -15,7 +15,7 @@ describe('checkGameDetails(data)', function() {
         it('game data', async function(){
             data = 
                   {
-                    date: "2022-5-29",
+                    date: "2021-7-31",
                     hour: "20:30:00",
                     away_team_id: 939,
                     home_team_id: 1020,
@@ -33,7 +33,7 @@ describe('checkGameDetails-teams not free', function() {
         it('game data', async function(){
             data = 
                   {
-                    date: "2022-5-29",
+                    date: "2021-7-31",
                     hour: "20:30:00",
                     away_team_id: 939,
                     home_team_id: 1020,

@@ -46,17 +46,17 @@ async function registerHundler(reqBody, next) {
       ],
       [username, firstname, lastname, country, password, email, picture]
     );
-    await data_utils.insertinto(
-      "dbo.role",
-      ["username", "role"],
-      [username, role]
-    );
     if (!status) {
       return {
         status: 400,
         message: "user not created, error",
       };
     } else {
+      await data_utils.insertinto(
+        "dbo.role",
+        ["username", "role"],
+        [username, role]
+      );
       return {
         status: 201,
         message: "user created",

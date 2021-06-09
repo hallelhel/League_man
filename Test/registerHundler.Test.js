@@ -211,6 +211,13 @@ describe('auth register handler', function(){
       expect(value.message).to.equal("user not created, error");
         })
   })
+  after(async function(){
+    const res = await DButils.execQuery(`SELECT username FROM Users WHERE username='failtest'`);
+    if(res[0]){
+      await DButils.execQuery(`DELETE FROM Users WHERE username='failtest'`);
+      // await DButils.execQuery(`DELETE FROM role WHERE username='failtest'`);
+    }
+  })
 })
 
 
