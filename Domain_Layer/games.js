@@ -24,6 +24,7 @@ const data_utils = require("../Data_Layer/sqlScripts");
 //   }
 // }
 
+
 async function authnticateLeagueManager(req, next) {
   if (req.session && req.session.username === "admin") {
     //clieant verification
@@ -46,7 +47,7 @@ async function authnticateLeagueManager(req, next) {
 
 async function addGameHundler(reqBody, next) {
   try {
-    data = reqBody;
+    const data = reqBody;
     const confirmDate = games_utils.checkIfGameDetailsInFuture(
       data.date,
       data.hour

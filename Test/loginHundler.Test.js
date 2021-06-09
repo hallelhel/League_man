@@ -55,18 +55,6 @@ describe('auth login Handler', function(){
       expect(value.message).to.equal("Username or Password incorrect");
         })
   })
-  // after(async function(){
-  //   const res = await chai.request(`${api_domain}`)
-  //   .post('/register')
-  //   .send({  username: "test",
-  //   firstname: "test",
-  //   lastname: "test",
-  //   country: "test",
-  //   password: "test",
-  //   email: "test@test.test",
-  //   picture: "test",
-  //   role: "test"});
-  // })
 })
 
 describe('auth login Handler', function(){

@@ -90,7 +90,7 @@ async function getGameDetaildByID(game_id) {
       eventSchedule: gameEventsLits,
     };
   } else {
-    return "Game does not exist in DB";
+    return -1;
   }
 }
 
@@ -218,45 +218,45 @@ async function checkGameDetails(data) {
 //     error;
 //   }
 // }
-// async function checkIfGameOccur(game_id) {
-//   game_id_num = Number(game_id);
-//   const gameDetails = await data_utils.getFromTable(
-//     "dbo.games",
-//     ["game_date", "game_hour"],
-//     [`game_id = ${game_id_num}`]
-//   );
-//   if (gameDetails[0]) {
-//     const date_hour_convert = convertDateAndHour(
-//       gameDetails[0].game_date,
-//       gameDetails[0].game_hour
-//     );
-//     const gameInFuture = checkIfGameDetailsInFuture(
-//       date_hour_convert.date,
-//       date_hour_convert.hour
-//     );
-//     // const gameInFuture = checkIfGameDetailsInFuture(
-//     //   gameDetails[0].game_date,
-//     //   gameDetails[0].game_hour
-//     // );
+async function checkIfGameOccur(game_id) {
+  game_id_num = Number(game_id);
+  const gameDetails = await data_utils.getFromTable(
+    "dbo.games",
+    ["game_date", "game_hour"],
+    [`game_id = ${game_id_num}`]
+  );
+  if (gameDetails[0]) {
+    const date_hour_convert = convertDateAndHour(
+      gameDetails[0].game_date,
+      gameDetails[0].game_hour
+    );
+    const gameInFuture = checkIfGameDetailsInFuture(
+      date_hour_convert.date,
+      date_hour_convert.hour
+    );
+    // const gameInFuture = checkIfGameDetailsInFuture(
+    //   gameDetails[0].game_date,
+    //   gameDetails[0].game_hour
+    // );
 
-//     if (gameInFuture) {
-//       return false;
-//     } else {
-//       return true;
-//     }
-//   }
-// }
-// function convertDateAndHour(date, hour) {
-//   let game_hour = String(hour).slice(16, 25);
-//   let game_date = String(date).slice(0, 15);
-//   return {
-//     date: game_date,
-//     hour: game_hour,
-//   };
-// }
+    if (gameInFuture) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+function convertDateAndHour(date, hour) {
+  let game_hour = String(hour).slice(16, 25);
+  let game_date = String(date).slice(0, 15);
+  return {
+    date: game_date,
+    hour: game_hour,
+  };
+}
 exports.AddGame = AddGame;
 // exports.AddScoresToGame = AddScoresToGame;
-// exports.checkIfGameOccur = checkIfGameOccur;
+exports.checkIfGameOccur = checkIfGameOccur;
 exports.getGameDetaildByID = getGameDetaildByID;
 // exports.AddEventToGame = AddEventToGame;
 exports.checkIfGameDetailsInFuture = checkIfGameDetailsInFuture;
