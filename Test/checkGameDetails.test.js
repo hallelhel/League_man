@@ -11,7 +11,7 @@ const games_utils = require("../Domain_Layer/utils/games_utils");
 
 //pass
 describe('checkGameDetails(data)', function() {
-    context('activate function',function(){
+    context('teams and field not free',function(){
         it('game data', async function(){
             data = 
                   {
@@ -28,48 +28,57 @@ describe('checkGameDetails(data)', function() {
     })
 });
 
+describe('checkGameDetails-teams not free', function() {
+    context('teams not free',function(){
+        it('game data', async function(){
+            data = 
+                  {
+                    date: "2022-5-29",
+                    hour: "20:30:00",
+                    away_team_id: 939,
+                    home_team_id: 1020,
+                    field: "Bloomfield",
+                    referee_username: "noam",
+                  }
+            let res = await games_utils.checkGameDetails(data);
+            expect(res).to.equal(`One or Both teams already embedded  in this time.\n`);
+        })
+    })
+});
 
-//pass
-// describe('#checkIfTeamExist(team_id)', function() {
-//     context('activate function',function(){
-//         it('team not exist', async function(){
-//             let res = await teams_utils.checkIfTeamExist(2650);
-//             expect(res).to.equal(false);
-//         })
-//     })
-// });
-// async function checkGameDetails(data) {
-//     try {
-//       let message = "";
-//       let referee_username = data.referee_username;
-//       let refereeCheck = await data_utils.getFromTable(
-//         "dbo.role",
-//         ["username", "role"],
-//         [`username='${referee_username}'`, `role='referee'`]
-//       );
-//       if (!refereeCheck[0]) {
-//         return `referee user didn't found on DB`;
-//       }
-//       let gameAtSameTime = await data_utils.getFromTable(
-//         "dbo.games",
-//         ["home_team_id", "away_team_id", "field"],
-//         [`game_date ='${data.date}'`, `game_hour='${data.hour}'`]
-//       );
-  
-//       if (
-//         gameAtSameTime.find(
-//           (x) =>
-//             x.home_team_id === data.home_team_id ||
-//             x.away_team_id === data.away_team_id
-//         )
-//       ) {
-//         message += "One or Both teams already embedded  in this time.\n";
-//       }
-//       if (gameAtSameTime.find((x) => x.field === data.field)) {
-//         message += "The field already embedded in this time";
-//       }
-//       return message;
-//     } catch {
-//       return "adding game faild";
-//     }
-//   }
+
+describe('checkGameDetails-referee', function() {
+    context('referee doesnt exist',function(){
+        it('referee test in game details', async function(){
+            data = 
+                  {
+                    date: "2022-5-29",
+                    hour: "20:30:00",
+                    away_team_id: 939,
+                    home_team_id: 1020,
+                    field: "Tedi",
+                    referee_username: "hallel",
+                  }
+            let res = await games_utils.checkGameDetails(data);
+            expect(res).to.equal(`referee user didn't found on DB`);
+        })
+    })
+});
+
+describe('checkGameDetails- valid details', function() {
+    context('game details valid',function(){
+        it('game data', async function(){
+            data = 
+                  {
+                    date: "2022-8-29",
+                    hour: "20:30:00",
+                    away_team_id: 939,
+                    home_team_id: 1020,
+                    field: "Tedi",
+                    referee_username: "noam",
+                  }
+            let res = await games_utils.checkGameDetails(data);
+            expect(res).to.equal(``);
+        })
+    })
+});
