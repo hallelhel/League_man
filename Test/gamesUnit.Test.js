@@ -32,16 +32,16 @@ describe("check if game in future", function () {
   });
 });
 
-describe("check the game review {Failes}", () => {
-  context("gameReview with fake game id", function () {
-    it("should return 400 if the game exist in DB and the details", async function () {
-      const FakeGameId = 123;
-      const result = await games.gameReviewHundler(FakeGameId);
-      expect(result.status).to.equal(400);
-      expect(result.message).to.equal(`There is no game with ID ${FakeGameId}`);
-    });
-  });
-});
+// describe("check the game review {Failes}", () => {
+//   context("gameReview with fake game id", function () {
+//     it("should return 400 if the game exist in DB and the details", async function () {
+//       const FakeGameId = 123;
+//       const result = await games.gameReviewHundler(FakeGameId);
+//       expect(result.status).to.equal(400);
+//       expect(result.message).to.equal(`There is no game with ID ${FakeGameId}`);
+//     });
+//   });
+// });
 
 //Testing addGameHundler
 describe("test addGameHundler#1 ", () => {
