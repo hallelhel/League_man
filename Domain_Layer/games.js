@@ -92,6 +92,5 @@ async function addGameHundler(reqBody, next) {
   }
 }
 
-exports.gameReviewHundler = gameReviewHundler;
 exports.authnticateLeagueManager = authnticateLeagueManager;
 exports.addGameHundler = addGameHundler;
