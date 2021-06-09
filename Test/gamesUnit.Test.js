@@ -32,23 +32,49 @@ describe("check if game in future", function () {
 });
 
 //Testing gameReview Hundler
-describe("check the game review", () => {
-  const testGameInfo = {
-    date: "2021-7-31",
-    hour: "22:30:00",
-    home_team_name: "AaB",
-    away_team_name: "Midtjylland",
-    home_team_id: 1020,
-    away_team_id: 939,
-    home_team_goal: 2,
-    away_team_goal: 1,
-    eventSchedule: {},
-  };
-  context("activate-function", function () {
-    it("should return 200 if the game exist in DB and the details", async function () {
-      const result = await games.gameReviewHundler(1);
-      expect(result.status).to.equal(200);
-      expect(result.message.home_team).to.equal("AaB");
-    });
-  });
-});
+// describe("check the game review", () => {
+//   const testGameInfo = {
+//     date: "2021-7-31",
+//     hour: "22:30:00",
+//     home_team_name: "AaB",
+//     away_team_name: "Midtjylland",
+//     home_team_id: 1020,
+//     away_team_id: 939,
+//     home_team_goal: 2,
+//     away_team_goal: 1,
+//     eventSchedule: {},
+//   };
+//   context("activate-function", function () {
+//     it("should return 200 if the game exist in DB and the details", async function () {
+//       function next(err) {
+//         // signal to exit route
+//         if (err && err === 'route') {
+//           return done();
+//         }
+        
+//         // signal to exit router
+//         if (err && err === 'router') {
+//           return done(err)
+//         }
+        
+//         var layer = stack[idx++];
+//         if (!layer) {
+//           return done(err);
+//         }
+        
+//         if (layer.method && layer.method !== method) {
+//           return next(err);
+//         }
+        
+//         if (err) {
+//           layer.handle_error(err, req, res, next);
+//         } else {
+//           layer.handle_request(req, res, next);
+//         }
+//       }
+//       const result = await games.gameReviewHundler(1,next);
+//       expect(result.status).to.equal(200);
+//       expect(result.message.home_team).to.equal("AaB");
+//     });
+//   });
+// });
