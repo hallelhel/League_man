@@ -5,7 +5,19 @@ const bcrypt = require("bcryptjs");
 const api_domain = "https://soccer.sportmonks.com/api/v2.0";
 const axios = require("axios");
 
+/*
+    ---SQL---
+represent all query to DB 
 
+*/
+
+
+/*this function get: 
+name of table in db, 
+name of value=column of table
+and values
+and do the insert into query
+*/
 async function insertinto(tableName, tableColNames, valuesArray){
     try{
         let valString ="";
@@ -20,25 +32,11 @@ async function insertinto(tableName, tableColNames, valuesArray){
     }
     catch{return false;}
 }
-
-async function updateTable(tableName, updateValuesArray, constraintStringArray=null){
-    try{
-        let valString ="";
-        updateValuesArray.forEach(x=> valString = valString.concat(x.toString(),', '));
-        valString = valString.slice(0,2);
-        if (constraintStringArray){
-            let constraintString = '';
-            constraintStringArray.forEach(x=> constraintString = constraintString.concat(`'`,x.toString(),`'`,', '));
-            constraintString.slice(0,2);
-            valString= valString.concat(' WHERE ', constraintString);
-        }
-        const query =`UPDATE ${tableName} SET ${updateValuesString} `.concat(valString) 
-        await DButils.execQuery(query);
-        return true;
-    }
-    catch{return false;}
-}
-
+/*this function get: 
+name of table in db, 
+name of value=record
+and return the appropriate record
+*/
 async function getFromTable(tableName, lookUpValuesArray, constraint=null){//constraint =[username=noam, password=1243]
     let valString ="";
     lookUpValuesArray.forEach(x=> valString = valString.concat(x.toString(),', '));
@@ -53,7 +51,9 @@ async function getFromTable(tableName, lookUpValuesArray, constraint=null){//con
     let res = await DButils.execQuery(dbQuery);
     return res;
 }
-
+/*this function get: 
+api path and return all data
+*/
 async function getFromSoccerAPI(finalAPI, includes =null){//get data from soccer api, include='team, league'
     try{
         let address = `${api_domain}/${finalAPI}`;
@@ -69,8 +69,6 @@ async function getFromSoccerAPI(finalAPI, includes =null){//get data from soccer
         return false;}
 
 }
-
 exports.insertinto = insertinto;
 exports.getFromTable = getFromTable;
 exports.getFromSoccerAPI =getFromSoccerAPI;
-exports.updateTable = updateTable;
