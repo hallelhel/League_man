@@ -29,6 +29,7 @@ describe('/Post games/LeagueManagment/addGame', ()=>{
             .end((err,res)=> {
                 // res.should.have.status(200)
                 res.status.should.be.equal(200);
+                console.log(res.should.have.property('text'));
                 res.should.have.property('text').eql('Game added successfuly');
                 done();
             })
