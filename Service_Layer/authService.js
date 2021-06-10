@@ -8,6 +8,8 @@ var router = express.Router();
 
 const auth = require("../Domain_Layer/auth");
 
+/*--- user routers----*/
+
 router.post("/register", async (req, res, next) => {
   const reqBody = req.body;
   const result = await auth.registerHundler(reqBody, next);

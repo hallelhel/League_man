@@ -2,6 +2,7 @@ var express = require("express");
 const bcrypt = require("bcryptjs");
 const data_utils = require("../Data_Layer/sqlScripts");
 
+//this function use for register new user get the data from service layer 
 async function registerHundler(reqBody, next) {
   try {
     // parameters exists
@@ -66,7 +67,7 @@ async function registerHundler(reqBody, next) {
     next(error);
   }
 }
-
+//this function use for login exist user get the data from service layer 
 async function loginHundler(reqBody, sessionUser, next) {
   try {
     let user = await data_utils.getFromTable(
@@ -111,7 +112,7 @@ async function loginHundler(reqBody, sessionUser, next) {
     next(error);
   }
 }
-
+//this function use for logot loged user get the data from service layer 
 function logoutHundler(sessionUser) {
   if (sessionUser.username) {
     sessionUser.reset(); // reset the session info --> send cookie when  req.session == undefined!!

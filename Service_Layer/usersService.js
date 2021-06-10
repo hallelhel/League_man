@@ -2,7 +2,8 @@ var express = require("express");
 var router = express.Router();
 
 const users = require("../Domain_Layer/users");
-
+/* functiom for us to shw tables in db
+*/
 router.use(async function (req, res, next) {
   if (req.session && req.session.username) {
     //clieant verification
